@@ -600,6 +600,9 @@ importers:
       '@tanstack/react-table':
         specifier: ^8.19.3
         version: 8.20.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      jotai:
+        specifier: ^2.11.0
+        version: 2.11.0(@types/react@18.3.11)(react@18.3.1)
       lucide-react:
         specifier: catalog:ui
         version: 0.456.0(react@18.3.1)
@@ -8310,6 +8313,18 @@ packages:
     peerDependencies:
       '@types/react': '>=17.0.0'
       jotai: '>=2.0.0'
+      react: '>=17.0.0'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      react:
+        optional: true
+
+  jotai@2.11.0:
+    resolution: {integrity: sha512-zKfoBBD1uDw3rljwHkt0fWuja1B76R7CjznuBO+mSX6jpsO1EBeWNRKpeaQho9yPI/pvCv4recGfgOXGxwPZvQ==}
+    engines: {node: '>=12.20.0'}
+    peerDependencies:
+      '@types/react': '>=17.0.0'
       react: '>=17.0.0'
     peerDependenciesMeta:
       '@types/react':
@@ -19715,6 +19730,11 @@ snapshots:
   jotai-x@1.2.4(@types/react@18.3.11)(jotai@2.8.4(@types/react@18.3.11)(react@18.3.1))(react@18.3.1):
     dependencies:
       jotai: 2.8.4(@types/react@18.3.11)(react@18.3.1)
+    optionalDependencies:
+      '@types/react': 18.3.11
+      react: 18.3.1
+
+  jotai@2.11.0(@types/react@18.3.11)(react@18.3.1):
     optionalDependencies:
       '@types/react': 18.3.11
       react: 18.3.1
