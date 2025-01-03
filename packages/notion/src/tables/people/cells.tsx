@@ -1,6 +1,9 @@
+"use client";
+
 import { SortDirection } from "@tanstack/react-table";
 import { CircleArrowUp, MoreHorizontalIcon } from "lucide-react";
 
+import { useTransition } from "@swy/ui/hooks";
 import { cn } from "@swy/ui/lib";
 import {
   Button,
@@ -126,19 +129,24 @@ export const TeamspacesCell = ({ teamspaces }: TeamspacesCellProps) => {
 interface RoleCellProps {
   role: PartialRole;
   scopes: Set<Scope>;
-  onSelect?: (role: PartialRole) => void;
+  onSelect?: (role: PartialRole) => void | Promise<void>;
 }
 export const RoleCell = ({ role, scopes, onSelect }: RoleCellProps) => {
+  const [select, isUpdating] = useTransition((role: PartialRole) =>
+    onSelect?.(role),
+  );
+
   return (
     <div className="flex items-center">
       {scopes.has(Scope.MemberUpdate) ? (
         <Select
           className="m-0 w-auto"
           options={roleOptions}
-          onChange={onSelect}
+          onChange={select}
           value={role}
           align="center"
           customDisplay={Custom}
+          disabled={isUpdating}
         />
       ) : (
         <div className="w-auto cursor-default text-sm text-secondary dark:text-secondary-dark">
@@ -157,22 +165,24 @@ const Custom: SelectProps["customDisplay"] = ({ option }) => (
 
 interface MemberActionCellProps {
   isSelf: boolean;
-  onDelete?: () => void;
+  onDelete?: () => void | Promise<void>;
 }
 
 export const MemberActionCell = ({
   isSelf,
   onDelete,
 }: MemberActionCellProps) => {
+  const [remove, isRemoving] = useTransition(() => onDelete?.());
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="hint" size="icon-sm">
+        <Button variant="hint" size="icon-sm" disabled={isRemoving}>
           <MoreHorizontalIcon className="size-5" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuItem variant="warning" onClick={onDelete}>
+        <DropdownMenuItem variant="warning" onClick={remove}>
           <Icon.Bye className="mr-2 size-4 flex-shrink-0 fill-red" />
           {isSelf ? "Leave workspace" : "Remove from workspace"}
         </DropdownMenuItem>
@@ -217,28 +227,35 @@ const AccessCellDisplay = ({ pages }: { pages: number }) => (
 );
 
 interface GuestActionCellProps {
-  onUpdate?: () => void;
-  onDelete?: () => void;
+  onUpdate?: () => void | Promise<void>;
+  onDelete?: () => void | Promise<void>;
 }
 
 export const GuestActionCell = ({
   onUpdate,
   onDelete,
 }: GuestActionCellProps) => {
+  const [upgrade, isUpgrading] = useTransition(() => onUpdate?.());
+  const [remove, isRemoving] = useTransition(() => onDelete?.());
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="hint" size="icon-sm">
+        <Button
+          variant="hint"
+          size="icon-sm"
+          disabled={isUpgrading || isRemoving}
+        >
           <MoreHorizontalIcon className="size-5" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuItem>
-          <CircleArrowUp className="mr-2 size-4" onClick={onUpdate} />
+          <CircleArrowUp className="mr-2 size-4" onClick={upgrade} />
           Upgrade to member
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem variant="warning" onClick={onDelete}>
+        <DropdownMenuItem variant="warning" onClick={remove}>
           <Icon.Bye className="mr-2 size-4 flex-shrink-0 fill-red" />
           Remove from workspace
         </DropdownMenuItem>

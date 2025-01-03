@@ -16,6 +16,9 @@ import {
 import { SettingsPanel } from "./settings-panel";
 import { useSettingsStore } from "./use-settings";
 
+/**
+ * @deprecated
+ */
 export interface SettingsProviderProps {
   settings: SettingsStore;
   onUpdate?: UpdateSettings;
@@ -33,6 +36,9 @@ export interface SettingsProviderProps {
   onDeleteMembership?: SettingsContextInterface["people"]["delete"];
 }
 
+/**
+ * @deprecated
+ */
 export function SettingsProvider({
   settings,
   onUpdate,
@@ -48,7 +54,8 @@ export function SettingsProvider({
   onDeleteMembership,
 }: SettingsProviderProps) {
   const { theme, setTheme } = useTheme();
-  const { update, account, workspace, tab, setTab } = useSettingsStore();
+  const { update, account, workspace, memberships, tab, setTab } =
+    useSettingsStore();
 
   useEffect(() => {
     update(settings);
@@ -57,7 +64,7 @@ export function SettingsProvider({
 
   const context = useMemo<SettingsContextInterface>(
     () => ({
-      settings: { account, workspace },
+      settings: { account, workspace, memberships },
       scopes: getScopes(workspace.plan, workspace.role),
       tab,
       setTab,
@@ -83,7 +90,7 @@ export function SettingsProvider({
       setTheme,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [account, theme, workspace, tab],
+    [account, memberships, theme, workspace, tab],
   );
 
   return (

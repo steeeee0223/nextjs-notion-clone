@@ -18,8 +18,8 @@ import type { MemberRow } from "../types";
 export const getMemberColumns = (
   memberId: string,
   scopes: Set<Scope>,
-  onUpdate?: (id: string, role: Role) => void,
-  onDelete?: (id: string) => void,
+  onUpdate?: (id: string, role: Role) => void | Promise<void>,
+  onDelete?: (id: string) => void | Promise<void>,
 ): ColumnDef<MemberRow, MemberRow>[] => [
   {
     id: "user",

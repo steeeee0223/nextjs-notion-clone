@@ -12,10 +12,6 @@ export const mockConnections = [
     scopes: ["Can preview links", "Can content"],
   },
 ];
-export const mockSettings: SettingsStore = {
-  workspace: { ...workspaces[0]!, domain: "fake-domain", inviteLink: "#" },
-  account: { ...mockUsers[0]!, preferredName: "Jonathan", language: "en" },
-};
 
 const pageAccesses = [
   [
@@ -30,26 +26,50 @@ const pageAccesses = [
   [],
 ];
 
-export const mockMemberships: WorkspaceMemberships = {
-  members: [
-    {
-      user: mockUsers[1]!,
-      teamspaces: {
-        current: "1",
-        options: [{ id: "1", name: "General", members: 29 }],
+export const mockSettings: SettingsStore = {
+  workspace: { ...workspaces[0]!, domain: "fake-domain", inviteLink: "#" },
+  account: { ...mockUsers[0]!, preferredName: "Jonathan", language: "en" },
+  memberships: mockUsers.reduce(
+    (acc, user, i) => ({
+      ...acc,
+      get [user.id]() {
+        switch (i) {
+          case 0:
+            return {
+              user,
+              teamspaces: {
+                current: "1",
+                options: [{ id: "1", name: "General", members: 29 }],
+              },
+              groups: { current: null, options: [] },
+              role: Role.OWNER,
+            };
+          case 1:
+            return {
+              user,
+              teamspaces: { current: null, options: [] },
+              groups: { current: null, options: [] },
+              role: Role.MEMBER,
+            };
+          default:
+            return {
+              role: Role.GUEST,
+              user,
+              access: randomItem(pageAccesses),
+            };
+        }
       },
-      groups: { current: null, options: [] },
-      role: Role.OWNER,
-    },
-    {
-      user: mockUsers[2]!,
-      teamspaces: { current: null, options: [] },
-      groups: { current: null, options: [] },
-      role: Role.MEMBER,
-    },
-  ],
-  guests: mockUsers.slice(2).map((user) => ({
-    user,
-    access: randomItem(pageAccesses),
-  })),
+    }),
+    {},
+  ),
 };
+
+export const mockMemberships = Object.values(
+  mockSettings.memberships,
+).reduce<WorkspaceMemberships>(
+  (acc, mem) =>
+    mem.role === Role.GUEST
+      ? { members: acc.members, guests: [...acc.guests, mem] }
+      : { members: [...acc.members, mem], guests: acc.guests },
+  { members: [], guests: [] },
+);

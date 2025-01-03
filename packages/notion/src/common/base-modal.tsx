@@ -1,7 +1,8 @@
 "use client";
 
-import { useLayoutEffect, useRef, useTransition } from "react";
+import { useLayoutEffect, useRef } from "react";
 
+import { useTransition } from "@swy/ui/hooks";
 import {
   Button,
   Dialog,
@@ -16,7 +17,7 @@ interface BaseModalProps {
   title: string;
   primary: string;
   secondary: string;
-  onTrigger?: () => void;
+  onTrigger?: () => void | Promise<void>;
 }
 
 export const BaseModal = ({
@@ -26,13 +27,12 @@ export const BaseModal = ({
   onTrigger,
 }: BaseModalProps) => {
   const { isOpen, setClose } = useModal();
-  const [loading, startTransition] = useTransition();
+  const [trigger, loading] = useTransition(() => onTrigger?.());
 
-  const reset = () =>
-    startTransition(() => {
-      onTrigger?.();
-      setClose();
-    });
+  const reset = async () => {
+    await trigger();
+    setClose();
+  };
 
   const buttonRef = useRef<HTMLButtonElement>(null);
   useLayoutEffect(() => {

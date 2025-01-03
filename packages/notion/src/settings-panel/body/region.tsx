@@ -26,9 +26,9 @@ export const Region = () => {
         title={t("language-region.modals.language.title", {
           language: langLabel,
         })}
-        onTrigger={() => {
-          updateSettings({ account: { language } });
-          void i18n.changeLanguage(language);
+        onTrigger={async () => {
+          await updateSettings({ account: { language } });
+          await i18n.changeLanguage(language);
         }}
       />,
     );

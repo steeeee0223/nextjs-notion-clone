@@ -22,9 +22,12 @@ export interface SettingsContextInterface
   setTab: (tab: TabType) => void;
   updateSettings: UpdateSettings;
   uploadFile?: UploadFile;
-  deleteAccount?: (data: { accountId: string; email: string }) => void;
-  deleteWorkspace?: (workspaceId: string) => void;
-  resetLink?: () => void;
+  deleteAccount?: (data: {
+    accountId: string;
+    email: string;
+  }) => void | Promise<void>;
+  deleteWorkspace?: (workspaceId: string) => void | Promise<void>;
+  resetLink?: () => void | Promise<void>;
   /** Connections */
   connections: {
     load?: () => Promise<Connection[]>;
@@ -32,10 +35,13 @@ export interface SettingsContextInterface
   };
   /** People */
   people: {
+    /**
+     * @deprecated
+     */
     load?: () => Promise<WorkspaceMemberships>;
-    add?: (emails: string[], role: Role) => void;
-    update?: (id: string, role: Role) => void;
-    delete?: (id: string) => void;
+    add?: (emails: string[], role: Role) => void | Promise<void>;
+    update?: (id: string, role: Role) => void | Promise<void>;
+    delete?: (id: string) => void | Promise<void>;
   };
 }
 

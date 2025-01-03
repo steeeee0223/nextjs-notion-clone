@@ -25,12 +25,11 @@ interface PageActions {
     >,
   ) => void;
   deletePage: (pageId: string) => void;
-  resetPages: () => void;
 }
 
 export type PageSlice = PageState & PageActions;
 
-const initialState: PageState = {
+export const initialPageState: PageState = {
   pages: {},
   activePage: null,
 };
@@ -38,7 +37,7 @@ const initialState: PageState = {
 export const createPageSlice: StateCreator<PageSlice, [], [], PageSlice> = (
   set,
 ) => ({
-  ...initialState,
+  ...initialPageState,
   setActivePage: (pageId) =>
     set((state) => {
       if (!(pageId && pageId in state.pages)) return {};
@@ -67,5 +66,4 @@ export const createPageSlice: StateCreator<PageSlice, [], [], PageSlice> = (
       delete pages[pageId];
       return { pages };
     }),
-  resetPages: () => set(initialState),
 });

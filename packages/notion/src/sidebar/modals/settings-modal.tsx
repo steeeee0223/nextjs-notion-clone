@@ -11,11 +11,11 @@ export const SettingsModal = (props: SettingsPanelProps) => {
     ...props,
     onDeleteAccount: (data) => {
       setClose();
-      props.onDeleteAccount?.(data);
+      void props.onDeleteAccount?.(data);
     },
     onDeleteWorkspace: (data) => {
       setClose();
-      props.onDeleteWorkspace?.(data);
+      void props.onDeleteWorkspace?.(data);
     },
   };
 

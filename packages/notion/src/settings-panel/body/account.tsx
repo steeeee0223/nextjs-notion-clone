@@ -5,6 +5,7 @@ import { ChevronRight, X } from "lucide-react";
 import { useHover } from "usehooks-ts";
 
 import { useTranslation } from "@swy/i18n";
+import { useTransition } from "@swy/ui/hooks";
 import { cn } from "@swy/ui/lib";
 import {
   Avatar,
@@ -41,17 +42,21 @@ export const Account = () => {
     deleteAccount,
   } = useSettings();
   const onUpdateAvatar = () => avatarInputRef.current?.click();
-  const onRemoveAvatar = () => void update({ account: { avatarUrl: "" } });
-  const onSelectImage = async (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const replaceTargetUrl = account.avatarUrl;
-      const url = URL.createObjectURL(file);
-      update({ account: { avatarUrl: url } });
-      const res = await uploadFile?.(file, { replaceTargetUrl });
-      if (res?.url) update({ account: { avatarUrl: res.url } });
-    }
-  };
+  const [removeAvatar, isRemoving] = useTransition(() =>
+    update({ account: { avatarUrl: "" } }),
+  );
+  const [selectImage, isUploading] = useTransition(
+    async (e: ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (file) {
+        const replaceTargetUrl = account.avatarUrl;
+        const url = URL.createObjectURL(file);
+        await update({ account: { avatarUrl: url } });
+        const res = await uploadFile?.(file, { replaceTargetUrl });
+        if (res?.url) await update({ account: { avatarUrl: res.url } });
+      }
+    },
+  );
   const onUpdateName = (e: ChangeEvent<HTMLInputElement>) =>
     update({ account: { preferredName: e.target.value } });
   /** Modals */
@@ -94,18 +99,19 @@ export const Account = () => {
                 >
                   <AvatarImage src={account.avatarUrl} />
                   <AvatarFallback className="bg-primary/5">
-                    image
+                    {account.name[0]}
                   </AvatarFallback>
                 </Avatar>
                 <div
                   ref={avatarCancelRef}
                   role="button"
-                  onClick={onRemoveAvatar}
+                  onClick={removeAvatar}
                   className={cn(
                     buttonVariants({ variant: "subitem" }),
                     "absolute -right-0.5 -top-0.5 z-10 hidden size-auto rounded-full border border-border-button bg-main p-1",
                     (avatarIsHover || avatarCancelIsHover) && "block",
                   )}
+                  aria-disabled={isRemoving || isUploading}
                 >
                   <X size={8} strokeWidth={2} />
                 </div>
@@ -115,7 +121,8 @@ export const Account = () => {
                 ref={avatarInputRef}
                 className="hidden"
                 accept="image/*"
-                onChange={onSelectImage}
+                onChange={selectImage}
+                disabled={isRemoving || isUploading}
               />
             </div>
             <div className="ml-5 w-[250px]">

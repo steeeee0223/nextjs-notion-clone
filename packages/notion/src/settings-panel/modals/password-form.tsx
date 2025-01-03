@@ -39,13 +39,10 @@ const passwordSchema = z
 
 interface PasswordFormProps {
   hasPassword?: boolean;
-  onSubmit?: (pass: string, original?: string | null) => void;
+  onSubmit?: (pass: string, original?: string | null) => void | Promise<void>;
 }
 
-export const PasswordForm = ({
-  hasPassword,
-  onSubmit: __onSubmit,
-}: PasswordFormProps) => {
+export const PasswordForm = ({ hasPassword, onSubmit }: PasswordFormProps) => {
   const { isOpen, setClose, setOpen } = useModal();
   const form = useForm<z.infer<typeof passwordSchema>>({
     resolver: zodResolver(passwordSchema),
@@ -57,11 +54,11 @@ export const PasswordForm = ({
     setClose();
     form.reset();
   };
-  const onSubmit = ({
+  const submit = async ({
     password,
     currentPassword,
   }: z.infer<typeof passwordSchema>) => {
-    __onSubmit?.(password, currentPassword);
+    await onSubmit?.(password, currentPassword);
     onClose();
     setOpen(<PasswordSuccess />);
   };
@@ -80,7 +77,7 @@ export const PasswordForm = ({
         noTitle
       >
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="relative">
+          <form onSubmit={form.handleSubmit(submit)} className="relative">
             <div className="my-4 flex justify-center">
               <Icon.Password className="size-[27px] flex-shrink-0 fill-primary/85" />
             </div>
@@ -151,6 +148,7 @@ export const PasswordForm = ({
               variant="blue"
               size="sm"
               className="mt-4 w-full"
+              disabled={form.formState.isSubmitting}
             >
               {hasPassword ? "Change password" : "Set a password"}
             </Button>

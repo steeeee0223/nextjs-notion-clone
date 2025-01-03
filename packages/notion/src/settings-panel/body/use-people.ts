@@ -2,28 +2,40 @@
 
 import { useEffect, useState } from "react";
 
-import type { WorkspaceMemberships } from "../index.types";
+import { Role } from "@swy/validators";
 
-interface UsePeopleOptions {
-  load?: () => Promise<WorkspaceMemberships>;
-}
+import { GuestRow, MemberRow } from "../../tables";
+import { WorkspaceMemberships } from "../index.types";
+import { useSettings } from "../settings-context";
 
-const initial: WorkspaceMemberships = { members: [], guests: [] };
-
-export const usePeople = ({ load }: UsePeopleOptions) => {
-  const [memberships, setMemberships] = useState<WorkspaceMemberships>(initial);
+export const usePeople = () => {
+  const {
+    settings: { memberships },
+    people: { load },
+  } = useSettings();
+  const [members, setMembers] = useState<MemberRow[]>([]);
+  const [guests, setGuests] = useState<GuestRow[]>([]);
 
   useEffect(() => {
-    const $load = async () => {
-      try {
-        const data = (await load?.()) ?? initial;
-        setMemberships(data);
-      } catch (error) {
-        console.log(`[settings:people] Error`, error);
-      }
-    };
-    void $load();
-  }, [load]);
+    if (Object.keys(memberships).length > 0) {
+      const data = Object.values(memberships).reduce<WorkspaceMemberships>(
+        (acc, mem) =>
+          mem.role === Role.GUEST
+            ? { members: acc.members, guests: [...acc.guests, mem] }
+            : { members: [...acc.members, mem], guests: acc.guests },
+        { members: [], guests: [] },
+      );
+      setMembers(data.members);
+      setGuests(data.guests);
+      return;
+    }
+    load?.()
+      .then((data) => {
+        setMembers(data.members);
+        setGuests(data.guests);
+      })
+      .catch((e) => console.log(`[settings:people] Error`, e));
+  }, [load, memberships]);
 
-  return { memberships };
+  return { members, guests };
 };

@@ -32,10 +32,8 @@ const CardItem = ({ title, description, action, more }: CardItemProps) => {
 };
 
 export const Security = () => {
-  const { people, setTab } = useSettings();
-  const {
-    memberships: { guests },
-  } = usePeople({ load: people.load });
+  const { setTab } = useSettings();
+  const { guests } = usePeople();
   /** i18n */
   const { t } = useTranslation("settings");
   const { cards, general, invite } = t("security", { returnObjects: true });

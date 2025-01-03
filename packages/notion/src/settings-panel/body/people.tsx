@@ -1,9 +1,12 @@
-import { useCallback, useMemo, useState, useTransition } from "react";
+"use client";
+
+import { useCallback, useMemo, useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { toast } from "sonner";
 import { useCopyToClipboard } from "usehooks-ts";
 
 import { useTranslation } from "@swy/i18n";
+import { useTransition } from "@swy/ui/hooks";
 import {
   Button,
   Input,
@@ -40,7 +43,6 @@ export const People = () => {
     resetLink,
     updateSettings,
   } = useSettings();
-  const [isUpdating, startTransition] = useTransition();
   /** i18n */
   const { t } = useTranslation("settings");
   const common = t("common", { returnObjects: true });
@@ -52,38 +54,35 @@ export const People = () => {
   /** Tables */
   const [search, setSearch] = useState("");
   const onUpdate = useCallback(
-    (id: string, role: Role) => {
-      void people.update?.(id, role);
-      if (id === account.id) void updateSettings({ workspace: { role } });
+    async (id: string, role: Role) => {
+      await people.update?.(id, role);
+      if (id === account.id) await updateSettings({ workspace: { role } });
     },
     [account.id, people, updateSettings],
   );
   const memberColumns = useMemo(() => {
     const onDelete = (id: string) =>
-      setOpen(<DeleteMember onDelete={() => void people.delete?.(id)} />);
+      setOpen(<DeleteMember onDelete={() => people.delete?.(id)} />);
     return getMemberColumns(account.id, scopes, onUpdate, onDelete);
   }, [account.id, scopes, onUpdate, setOpen, people]);
   const guestColumns = useMemo(() => {
     const onDelete = (id: string, name: string) =>
-      setOpen(
-        <DeleteGuest name={name} onDelete={() => void people.delete?.(id)} />,
-      );
+      setOpen(<DeleteGuest name={name} onDelete={() => people.delete?.(id)} />);
     return getGuestColumns(scopes, onUpdate, onDelete);
   }, [scopes, onUpdate, setOpen, people]);
-  const {
-    memberships: { members, guests },
-  } = usePeople({ load: people.load });
+  const { members, guests } = usePeople();
   /** Handlers */
   const [, copy] = useCopyToClipboard();
   const onCopy = async () => {
     await copy(workspace.inviteLink);
     toast.success("Copied link to clipboard");
   };
+  const [updateLink, isUpdating] = useTransition(() => resetLink?.());
   const onResetLink = () =>
     setOpen(
       <BaseModal
         {...modals["reset-link"]}
-        onTrigger={() => startTransition(() => resetLink?.())}
+        onTrigger={() => void updateLink()}
       />,
     );
   const onAddMembers = () =>

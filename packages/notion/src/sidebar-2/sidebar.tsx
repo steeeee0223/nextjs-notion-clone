@@ -12,12 +12,16 @@ import { useHotkeys } from "react-hotkeys-hook";
 
 import { cn } from "@swy/ui/lib";
 import { Button, useTheme } from "@swy/ui/shadcn";
-import { Hint, useModal } from "@swy/ui/shared";
+import { Hint, IconInfo, useModal } from "@swy/ui/shared";
 
-import type { SettingsPanelProps } from "../settings-panel";
 import type { UpdatePageParams } from "../types";
-import { DocList, FavoriteList, HintItem, TrashBox } from "./_components";
-import { SearchCommand, SettingsModal } from "./modals";
+import {
+  DocList,
+  FavoriteList,
+  HintItem,
+  SearchCommand,
+  TrashBox,
+} from "./_components";
 
 const GROUPS = {
   document: "Document",
@@ -30,7 +34,11 @@ interface SidebarProps {
   isMobile?: boolean;
   collapse?: () => void;
   redirect?: (path: string) => void;
-  settingsProps: SettingsPanelProps;
+  workspace: {
+    name: string;
+    icon: IconInfo;
+  };
+  onOpenSettings: () => void;
   pageHandlers: {
     isLoading?: boolean;
     onCreate?: (type: string, parentId?: string) => void;
@@ -45,9 +53,10 @@ export const Sidebar2 = forwardRef<HTMLElement, SidebarProps>(function Sidebar(
   {
     className,
     isMobile,
+    workspace,
     collapse,
     redirect,
-    settingsProps,
+    onOpenSettings,
     pageHandlers: pages,
     WorkspaceSwitcher,
   },
@@ -57,14 +66,10 @@ export const Sidebar2 = forwardRef<HTMLElement, SidebarProps>(function Sidebar(
   /** Modals */
   const { setOpen } = useModal();
   const [trashOpen, setTrashOpen] = useState(false);
-  const onOpenSettings = () => {
-    const workspaceId = settingsProps.settings.workspace.id;
-    setOpen(<SettingsModal key={workspaceId} {...settingsProps} />);
-  };
   const onOpenSearch = () =>
     setOpen(
       <SearchCommand
-        workspaceName={settingsProps.settings.workspace.name}
+        workspaceName={workspace.name}
         onSelect={(id, group) => redirect?.(`/${group}/${id}`)}
         onOpenTrash={setTrashOpen}
       />,

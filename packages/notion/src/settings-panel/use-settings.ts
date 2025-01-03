@@ -33,8 +33,12 @@ const initialSettings: Settings = {
     email: "",
     language: "en",
   },
+  memberships: {},
 };
 
+/**
+ * @deprecated
+ */
 export const useSettingsStore = create<SettingsStore>()(
   devtools(
     persist(
@@ -42,10 +46,11 @@ export const useSettingsStore = create<SettingsStore>()(
         ...initialSettings,
         tab: "my-settings",
         setTab: (tab) => set((state) => ({ ...state, tab })),
-        update: ({ workspace, account }) =>
+        update: ({ workspace, account, memberships }) =>
           set((state) => ({
             workspace: { ...state.workspace, ...workspace },
             account: { ...state.account, ...account },
+            memberships: { ...state.memberships, ...memberships },
           })),
         reset: () => set({ ...initialSettings, tab: "my-settings" }),
       }),
