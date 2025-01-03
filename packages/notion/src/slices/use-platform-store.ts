@@ -4,11 +4,21 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { useShallow } from "zustand/react/shallow";
 
-import { createUserSlice, type UserSlice } from "./account";
-import { createPageSlice, type PageSlice } from "./page";
-import { createWorkspaceSlice, type WorkspaceSlice } from "./workspace";
+import { createUserSlice, initialUserState, type UserSlice } from "./account";
+import { createPageSlice, initialPageState, type PageSlice } from "./page";
+import {
+  createWorkspaceSlice,
+  initialWorkspaceState,
+  type WorkspaceSlice,
+} from "./workspace";
 
-export type PlatformStore = UserSlice & WorkspaceSlice & PageSlice;
+interface PlatformActions {
+  reset: () => void;
+}
+export type PlatformStore = UserSlice &
+  WorkspaceSlice &
+  PageSlice &
+  PlatformActions;
 
 const useStore = create<PlatformStore, [["zustand/persist", unknown]]>(
   persist(
@@ -16,6 +26,12 @@ const useStore = create<PlatformStore, [["zustand/persist", unknown]]>(
       ...createUserSlice(...a),
       ...createWorkspaceSlice(...a),
       ...createPageSlice(...a),
+      reset: () =>
+        a[0]({
+          ...initialUserState,
+          ...initialWorkspaceState,
+          ...initialPageState,
+        }),
     }),
     { name: "platform" },
   ),

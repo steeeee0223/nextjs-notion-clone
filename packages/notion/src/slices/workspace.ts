@@ -12,12 +12,11 @@ interface WorkspaceActions {
   addWorkspace: (workspace: Workspace) => void;
   updateWorkspace: (workspaceId: string, data: Partial<Workspace>) => void;
   deleteWorkspace: (workspaceId: string) => void;
-  resetWorkspaces: () => void;
 }
 
 export type WorkspaceSlice = WorkspaceState & WorkspaceActions;
 
-const initialState: WorkspaceState = {
+export const initialWorkspaceState: WorkspaceState = {
   workspaces: {},
   activeWorkspace: null,
 };
@@ -28,7 +27,7 @@ export const createWorkspaceSlice: StateCreator<
   [],
   WorkspaceSlice
 > = (set) => ({
-  ...initialState,
+  ...initialWorkspaceState,
   setActiveWorkspace: (workspaceId) =>
     set((state) => {
       if (!(workspaceId && workspaceId in state.workspaces)) return {};
@@ -53,9 +52,10 @@ export const createWorkspaceSlice: StateCreator<
       },
     })),
   deleteWorkspace: (workspaceId) =>
-    set(({ workspaces }) => {
+    set(({ workspaces, activeWorkspace }) => {
       delete workspaces[workspaceId];
-      return { workspaces };
+      return activeWorkspace === workspaceId
+        ? { workspaces, activeWorkspace: null }
+        : { workspaces };
     }),
-  resetWorkspaces: () => set(initialState),
 });
