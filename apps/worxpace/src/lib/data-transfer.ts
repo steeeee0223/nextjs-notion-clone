@@ -127,6 +127,7 @@ export function toSettingsStore(
       domain: workspace.domain,
       plan: Plan[workspace.plan],
     },
+    memberships: {},
   };
 }
 

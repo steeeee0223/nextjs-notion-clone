@@ -23,13 +23,10 @@ const workspaceSchema = z.object({
 
 interface DeleteWorkspaceProps {
   name: string;
-  onSubmit?: (name: string) => void;
+  onSubmit?: (name: string) => void | Promise<void>;
 }
 
-export const DeleteWorkspace = ({
-  name,
-  onSubmit: $onSubmit,
-}: DeleteWorkspaceProps) => {
+export const DeleteWorkspace = ({ name, onSubmit }: DeleteWorkspaceProps) => {
   const { isOpen, setClose } = useModal();
   const form = useForm<z.infer<typeof workspaceSchema>>({
     resolver: zodResolver(workspaceSchema),
@@ -40,10 +37,10 @@ export const DeleteWorkspace = ({
     form.reset();
     form.clearErrors();
   };
-  const onSubmit = (value: z.infer<typeof workspaceSchema>) => {
+  const submit = async (value: z.infer<typeof workspaceSchema>) => {
     if (value.name === name) {
       onClose();
-      $onSubmit?.(name);
+      await onSubmit?.(name);
     } else {
       form.reset();
     }
@@ -73,7 +70,7 @@ export const DeleteWorkspace = ({
         </div>
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit(onSubmit)}
+            onSubmit={form.handleSubmit(submit)}
             className="flex w-full flex-col"
             style={{ marginTop: 0 }}
           >
@@ -98,6 +95,7 @@ export const DeleteWorkspace = ({
               variant="red:fill"
               size="sm"
               className="mt-6 w-full"
+              disabled={form.formState.isSubmitting}
             >
               Permanently delete workspace
             </Button>
@@ -107,6 +105,7 @@ export const DeleteWorkspace = ({
                 variant="hint"
                 size="sm"
                 className="mt-3 h-7 w-fit"
+                disabled={form.formState.isSubmitting}
               >
                 Cancel
               </Button>

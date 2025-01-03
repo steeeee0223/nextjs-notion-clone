@@ -15,8 +15,8 @@ import type { GuestRow } from "../types";
 
 export const getGuestColumns = (
   scopes: Set<Scope>,
-  onUpdate?: (id: string, role: Role) => void,
-  onDelete?: (id: string, name: string) => void,
+  onUpdate?: (id: string, role: Role) => void | Promise<void>,
+  onDelete?: (id: string, name: string) => void | Promise<void>,
 ): ColumnDef<GuestRow, GuestRow>[] => [
   {
     id: "user",

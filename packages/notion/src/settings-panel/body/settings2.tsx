@@ -3,6 +3,7 @@
 import React from "react";
 
 import { useTranslation } from "@swy/i18n";
+import { useTransition } from "@swy/ui/hooks";
 import { Button, Input, Separator, Switch } from "@swy/ui/shadcn";
 import { IconBlock, IconMenu, useModal, type IconInfo } from "@swy/ui/shared";
 
@@ -29,18 +30,21 @@ export const Settings2 = () => {
   /** Handlers */
   const onUpdateName = (e: React.ChangeEvent<HTMLInputElement>) =>
     update({ workspace: { name: e.target.value } });
-  const onUpdateIcon = (icon: IconInfo) => update({ workspace: { icon } });
-  const onRemoveIcon = () =>
-    update({ workspace: { icon: { type: "text", text: workspace.name } } });
-  const onUploadIcon = async (file: File) => {
+  const [updateIcon, isUpdatingIcon] = useTransition((icon: IconInfo) =>
+    update({ workspace: { icon } }),
+  );
+  const [removeIcon, isRemoving] = useTransition(() =>
+    update({ workspace: { icon: { type: "text", text: workspace.name } } }),
+  );
+  const [uploadIcon, isUploading] = useTransition(async (file: File) => {
     const replaceTargetUrl =
       workspace.icon.type === "file" ? workspace.icon.url : undefined;
     const url = URL.createObjectURL(file);
-    update({ workspace: { icon: { type: "file", url } } });
+    await update({ workspace: { icon: { type: "file", url } } });
     const res = await uploadFile?.(file, { replaceTargetUrl });
     if (res?.url)
-      update({ workspace: { icon: { type: "file", url: res.url } } });
-  };
+      await update({ workspace: { icon: { type: "file", url: res.url } } });
+  });
   const onUpdateDomain = (e: React.ChangeEvent<HTMLInputElement>) =>
     update({ workspace: { domain: e.target.value } });
   const onDeleteWorkspace = () =>
@@ -61,9 +65,10 @@ export const Settings2 = () => {
         <Content {...workspaceSettings.icon}>
           <div className="rounded-md border border-border p-0.5">
             <IconMenu
-              onSelect={onUpdateIcon}
-              onRemove={onRemoveIcon}
-              onUpload={onUploadIcon}
+              disabled={isUpdatingIcon || isRemoving || isUploading}
+              onSelect={updateIcon}
+              onRemove={removeIcon}
+              onUpload={uploadIcon}
             >
               <IconBlock icon={workspace.icon} size="lg" />
             </IconMenu>

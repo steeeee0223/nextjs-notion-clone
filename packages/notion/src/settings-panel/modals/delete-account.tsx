@@ -24,13 +24,10 @@ const userSchema = z.object({
 
 interface DeleteAccountProps {
   email: string;
-  onSubmit?: (email: string) => void;
+  onSubmit?: (email: string) => void | Promise<void>;
 }
 
-export const DeleteAccount = ({
-  email,
-  onSubmit: $onSubmit,
-}: DeleteAccountProps) => {
+export const DeleteAccount = ({ email, onSubmit }: DeleteAccountProps) => {
   const { isOpen, setClose } = useModal();
   const form = useForm<z.infer<typeof userSchema>>({
     resolver: zodResolver(userSchema),
@@ -41,10 +38,10 @@ export const DeleteAccount = ({
     form.reset();
     form.clearErrors();
   };
-  const onSubmit = (value: z.infer<typeof userSchema>) => {
+  const submit = async (value: z.infer<typeof userSchema>) => {
     if (value.email === email) {
       onClose();
-      $onSubmit?.(email);
+      await onSubmit?.(email);
     } else {
       form.reset();
     }
@@ -74,7 +71,7 @@ export const DeleteAccount = ({
         </div>
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit(onSubmit)}
+            onSubmit={form.handleSubmit(submit)}
             className="flex w-full flex-col"
             style={{ marginTop: 0 }}
           >
@@ -105,6 +102,7 @@ export const DeleteAccount = ({
               variant="red:fill"
               size="sm"
               className="mt-6 w-full"
+              disabled={form.formState.isSubmitting}
             >
               Permanently delete account
             </Button>
@@ -114,6 +112,7 @@ export const DeleteAccount = ({
                 variant="hint"
                 size="sm"
                 className="mt-3 h-7 w-fit"
+                disabled={form.formState.isSubmitting}
               >
                 Cancel
               </Button>

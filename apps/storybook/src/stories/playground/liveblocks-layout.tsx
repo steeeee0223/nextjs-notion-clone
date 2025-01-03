@@ -7,15 +7,10 @@ import {
   PageProvider,
   Sidebar2,
   usePlatformStore,
+  useSettingsStore2,
   WorkspaceSwitcher2,
 } from "@swy/notion";
-import {
-  mockConnections,
-  mockLogs,
-  mockMemberships,
-  mockPages,
-  mockSettings,
-} from "@swy/notion/mock";
+import { mockLogs, mockPages, mockSettings } from "@swy/notion/mock";
 import { useSidebarLayout } from "@swy/ui/hooks";
 import { cn } from "@swy/ui/lib";
 import {
@@ -23,7 +18,9 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@swy/ui/shadcn";
+import { useModal } from "@swy/ui/shared";
 
+import { SettingsModal } from "../notion/settings-panel/settings";
 import { usePages } from "./use-pages";
 
 /** Setup Liveblocks */
@@ -34,17 +31,25 @@ const { useSelf, useOthers } = createRoomContext(client);
 type LayoutProps = React.PropsWithChildren;
 
 export const LayoutWithLiveblocks = ({ children }: LayoutProps) => {
+  const { setOpen } = useModal();
   const { minSize, ref, collapse, expand, isResizing, isMobile, isCollapsed } =
     useSidebarLayout("group", "sidebar", 240);
   /** Bound stores */
-  const activeWorkspace = usePlatformStore((state) => state.activeWorkspace);
+  // const activeWorkspace = usePlatformStore((state) => state.activeWorkspace);
+  const activeWorkspace = useSettingsStore2(
+    (state) => state.settings.workspace,
+  );
   const workspaces = usePlatformStore((state) => state.workspaces);
   const user = usePlatformStore((state) => state.user);
   const setActiveWorkspace = usePlatformStore(
     (state) => state.setActiveWorkspace,
   );
-  const { pageId, isLoading, selectPage, updatePage, deletePage } =
-    usePages(activeWorkspace);
+  const { pageId, isLoading, selectPage, updatePage, deletePage } = usePages(
+    activeWorkspace.id,
+  );
+
+  const openSettings = () =>
+    setOpen(<SettingsModal initialData={mockSettings} />);
 
   return (
     <ResizablePanelGroup
@@ -67,11 +72,8 @@ export const LayoutWithLiveblocks = ({ children }: LayoutProps) => {
           isMobile={isMobile}
           collapse={collapse}
           redirect={selectPage}
-          settingsProps={{
-            settings: mockSettings,
-            onFetchConnections: () => Promise.resolve(mockConnections),
-            onFetchMemberships: () => Promise.resolve(mockMemberships),
-          }}
+          workspace={{ name: activeWorkspace.name, icon: activeWorkspace.icon }}
+          onOpenSettings={openSettings}
           pageHandlers={{
             isLoading,
             onUpdate: updatePage,
@@ -80,7 +82,7 @@ export const LayoutWithLiveblocks = ({ children }: LayoutProps) => {
           WorkspaceSwitcher={
             <WorkspaceSwitcher2
               user={user!}
-              activeWorkspace={workspaces[activeWorkspace!]!}
+              activeWorkspace={workspaces[activeWorkspace.id]!}
               workspaces={Object.values(workspaces)}
               onSelect={setActiveWorkspace}
             />

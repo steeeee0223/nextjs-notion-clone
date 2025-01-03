@@ -24,15 +24,27 @@ export interface AccountStore extends User {
   language?: LOCALE;
 }
 
+type Membership =
+  | ({ role: Role.OWNER | Role.MEMBER } & MemberRow)
+  | ({ role: Role.GUEST } & GuestRow);
+
 export interface SettingsStore extends ModalData {
   workspace: WorkspaceStore;
   account: AccountStore;
+  /**
+   * key: userId
+   */
+  memberships: Record<string, Membership>;
 }
 
-export type UpdateSettings = (data: {
+export interface UpdateSettingsParams {
   workspace?: Partial<WorkspaceStore>;
   account?: Partial<AccountStore>;
-}) => void;
+  memberships?: Record<string, Membership>;
+}
+export type UpdateSettings = (
+  data: UpdateSettingsParams,
+) => void | Promise<void>;
 
 export interface WorkspaceMemberships {
   members: MemberRow[];
