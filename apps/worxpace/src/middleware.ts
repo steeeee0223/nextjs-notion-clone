@@ -11,7 +11,6 @@ const isProtectedRoute = createRouteMatcher([
   "/document(.*)",
   "/kanban(.*)",
   "/whiteboard(.*)",
-  "/workflow(.*)",
   "/workspace(.*)",
 ]);
 

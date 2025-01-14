@@ -1,5 +1,12 @@
 # Changelog
 
+## Version `1.5.0`
+
+### 🆕 Core Updates
+
+- `worxpace`
+  - Remove route `/workflow/*`
+
 ## Version `1.4.0`
 
 ### 🆕 Core Updates
