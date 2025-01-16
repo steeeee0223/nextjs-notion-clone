@@ -31,7 +31,6 @@ export const TextCell: React.FC<TextCellProps> = ({ value, onChange }) => {
             className="pointer-events-auto sticky right-1 flex"
           >
             <Hint
-              asChild
               description="Copy to Clipboard"
               side="top"
               className="z-[9990]"

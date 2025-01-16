@@ -1,6 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
-import { useReducer } from "react";
+import { useMemo, useReducer } from "react";
 import {
   getCoreRowModel,
   useReactTable,
@@ -21,12 +22,9 @@ interface TableViewAtom {
 type TableViewAction =
   | {
       type: "update:cell";
-      payload: {
-        rowId: string;
-        property: string;
-        data: CellDataType;
-      };
+      payload: { rowId: string; property: string; data: CellDataType };
     }
+  | { type: "resize"; payload: { id: string; width: string } }
   | { type: "reset" };
 const tableViewReducer = (
   v: TableViewAtom,
@@ -45,6 +43,14 @@ const tableViewReducer = (
               [a.payload.property]: a.payload.data,
             },
           };
+        }),
+      };
+    case "resize":
+      return {
+        ...v,
+        properties: v.properties.map((col) => {
+          if (col.id !== a.payload.id) return col;
+          return { ...col, width: a.payload.width };
         }),
       };
     case "reset":
@@ -70,7 +76,28 @@ export const useTableView = (initial: TableViewAtom) => {
     ({ id, ...property }) => ({
       id,
       accessorKey: property.name,
-      header: () => <TableHeaderCell {...property} />,
+      minSize: property.type === "checkbox" ? 32 : 100,
+      header: ({ header }) => (
+        <TableHeaderCell
+          {...property}
+          width={`calc(var(--col-${id}-size) * 1px)`}
+          isResizing={header.column.getIsResizing()}
+          resizeHandle={{
+            onMouseDown: header.getResizeHandler(),
+            onMouseUp: () =>
+              dispatch({
+                type: "resize",
+                payload: { id, width: `${header.column.getSize()}px` },
+              }),
+            onTouchStart: header.getResizeHandler(),
+            onTouchEnd: () =>
+              dispatch({
+                type: "resize",
+                payload: { id, width: `${header.column.getSize()}px` },
+              }),
+          }}
+        />
+      ),
       cell: ({ row, column }) => {
         const cell = row.original.properties[property.name];
         if (!cell) return null;
@@ -79,7 +106,8 @@ export const useTableView = (initial: TableViewAtom) => {
             data={cell}
             rowId={row.index}
             colId={column.getIndex()}
-            width={property.width}
+            // width={property.width}
+            width={`calc(var(--col-${id}-size) * 1px)`}
             onChange={(data) =>
               dispatch({
                 type: "update:cell",
@@ -99,6 +127,12 @@ export const useTableView = (initial: TableViewAtom) => {
   const table = useReactTable({
     columns,
     data,
+    defaultColumn: {
+      size: 200,
+      minSize: 100,
+      maxSize: Number.MAX_SAFE_INTEGER,
+    },
+    columnResizeMode: "onChange",
     getCoreRowModel: getCoreRowModel(),
     // meta: {
     //   updateCell: (payload: Extract<TableViewAction, {type: 'update:cell'}>['payload']) => {
@@ -108,5 +142,26 @@ export const useTableView = (initial: TableViewAtom) => {
     // }
   });
 
-  return { table };
+  /**
+   * Instead of calling `column.getSize()` on every render for every header
+   * and especially every data cell (very expensive),
+   * we will calculate all column sizes at once at the root table level in a useMemo
+   * and pass the column sizes down as CSS variables to the <table> element.
+   */
+  const columnSizeVars = useMemo(() => {
+    return table.getFlatHeaders().reduce<Record<string, number>>(
+      (sizes, header) => ({
+        ...sizes,
+        [`--header-${header.id}-size`]: header.getSize(),
+        [`--col-${header.column.id}-size`]: header.column.getSize(),
+      }),
+      {},
+    );
+  }, [
+    table.getFlatHeaders(),
+    table.getState().columnSizingInfo,
+    table.getState().columnSizing,
+  ]);
+
+  return { table, columnSizeVars };
 };

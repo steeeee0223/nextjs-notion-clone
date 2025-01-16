@@ -6,6 +6,8 @@ import { Hint } from "@swy/ui/shared";
 
 import "../view.css";
 
+import { cn } from "@swy/ui/lib";
+
 import * as Icon from "../icons";
 import { CellTrigger } from "./cell-trigger";
 import { TextInputPopover } from "./text-input-popover";
@@ -17,7 +19,7 @@ interface TitleCellProps {
 }
 
 export const TitleCell: React.FC<TitleCellProps> = ({ value, onChange }) => {
-  const { ref, position } = useTriggerPosition();
+  const { ref, position, width } = useTriggerPosition();
   return (
     <TextInputPopover value={value} position={position} onChange={onChange}>
       <CellTrigger ref={ref}>
@@ -39,8 +41,13 @@ export const TitleCell: React.FC<TitleCellProps> = ({ value, onChange }) => {
                 onClick={(e) => e.stopPropagation()}
                 onKeyDown={(e) => e.stopPropagation()}
               >
-                <Icon.PeekModeSide className="mr-1.5 block size-[14px] shrink-0 fill-secondary text-secondary dark:fill-secondary-dark dark:text-secondary-dark" />
-                Open
+                <Icon.PeekModeSide
+                  className={cn(
+                    "block size-[14px] shrink-0 fill-secondary text-secondary dark:fill-secondary-dark dark:text-secondary-dark",
+                    width > 110 && "mr-1.5",
+                  )}
+                />
+                {width > 110 && <>Open</>}
               </div>
             </Hint>
           </div>

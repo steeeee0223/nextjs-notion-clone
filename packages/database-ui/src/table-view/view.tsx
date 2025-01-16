@@ -6,8 +6,8 @@ import { flexRender } from "@tanstack/react-table";
 import { paddingX } from "../database/constant";
 import { cols, mockData } from "./__mock__";
 import * as Icon from "./icons";
+import { MemoizedTableBody, TableBody } from "./table-body";
 import { TableHeaderRow } from "./table-header-row";
-import { TableRow } from "./table-row";
 import type { DatabaseProperty, RowDataType } from "./types";
 import { useTableView } from "./use-table-view";
 
@@ -20,7 +20,7 @@ export const TableView: React.FC<TableViewProps> = ({
   properties = cols,
   data = mockData,
 }) => {
-  const { table } = useTableView({ properties, data });
+  const { table, columnSizeVars } = useTableView({ properties, data });
 
   return (
     <div
@@ -35,6 +35,7 @@ export const TableView: React.FC<TableViewProps> = ({
         data-block-id="15f35e0f-492c-8003-9976-f8ae747a6aeb"
         // key="notion-selectable notion-collection_view-block"
         className="relative"
+        style={columnSizeVars}
       >
         {/* Header row */}
         <div className="h-[34px]">
@@ -63,7 +64,7 @@ export const TableView: React.FC<TableViewProps> = ({
             </div>
           </div>
         </div>
-
+        {/* Table body */}
         <div className="relative isolation-auto min-w-[708px]">
           {/* Drag and Fill handle */}
           <div
@@ -85,20 +86,16 @@ export const TableView: React.FC<TableViewProps> = ({
             <div
               data-block-id="15f35e0f-492c-8003-9976-f8ae747a6aeb"
               // key="notion-selectable notion-collection_view-block"
-              // I impl. this
+              // @note I added these classes
               className="flex w-full border-b border-b-border-cell"
             />
           </div>
           {/* Rows */}
-          {table.getRowModel().rows.map((row) => (
-            <TableRow key={row.id} blockId={row.id}>
-              {row.getVisibleCells().map((cell) => (
-                <React.Fragment key={cell.id}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </React.Fragment>
-              ))}
-            </TableRow>
-          ))}
+          {table.getState().columnSizingInfo.isResizingColumn ? (
+            <MemoizedTableBody table={table} />
+          ) : (
+            <TableBody table={table} />
+          )}
         </div>
         <div className="w-[438px]" />
         <div
@@ -146,8 +143,8 @@ export const TableView: React.FC<TableViewProps> = ({
           </div>
         </div>
       </div>
-      <div className="pointer-events: none; clear: both; transform: translateY(0px); mt-0 h-0"></div>
-      <div className="transform: translateY(-34px); absolute z-[9990] w-full"></div>
+      <div className="pointer-events-none clear-both mt-0 h-0 translate-y-0" />
+      <div className="absolute z-[9990] w-full translate-y-[-34px]" />
     </div>
   );
 };
