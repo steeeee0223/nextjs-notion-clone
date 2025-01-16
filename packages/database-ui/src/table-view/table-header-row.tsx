@@ -4,11 +4,18 @@ import "./view.css";
 import React from "react";
 
 import * as Icon from "./icons";
+import { PropertiesMenu } from "./menus";
 import { ActionCell } from "./table-header-cells";
+import type { PropertyType } from "./types";
 
-type TableHeaderRowProps = React.PropsWithChildren;
+interface TableHeaderRowProps extends React.PropsWithChildren {
+  onSelectProp?: (type: PropertyType, name: string) => void;
+}
 
-export const TableHeaderRow: React.FC<TableHeaderRowProps> = ({ children }) => {
+export const TableHeaderRow: React.FC<TableHeaderRowProps> = ({
+  children,
+  onSelectProp,
+}) => {
   return (
     <div
       // key="notion-table-view-header-row"
@@ -32,11 +39,7 @@ export const TableHeaderRow: React.FC<TableHeaderRowProps> = ({ children }) => {
         </div>
       </div>
       <div className="m-0 inline-flex">{children}</div>
-      <ActionCell
-        icon={
-          <Icon.Plus className="block h-full w-3 shrink-0 fill-primary/45" />
-        }
-      />
+      <PropertiesMenu onSelectProp={onSelectProp} />
       <ActionCell
         icon={
           <Icon.Dots className="block h-full w-3 shrink-0 fill-primary/45" />

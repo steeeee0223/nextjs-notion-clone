@@ -1,5 +1,3 @@
-import { ModalProvider } from "@swy/ui/shared";
-
 import { Database } from "./database";
 
 import "./notion.css";
@@ -15,9 +13,7 @@ function App() {
         {/* Wrapper for Database View */}
         {/* width, left, padding-x will change when resizing */}
         <div className="relative min-h-10 w-full px-[96px]">
-          <ModalProvider>
-            <Database />
-          </ModalProvider>
+          <Database />
         </div>
       </div>
     </div>

@@ -1,6 +1,6 @@
 import "./view.css";
 
-import React from "react";
+import React, { forwardRef } from "react";
 
 import { cn } from "@swy/ui/lib";
 import { Hint } from "@swy/ui/shared";
@@ -92,18 +92,24 @@ interface ActionCellProps {
   icon: React.ReactNode;
 }
 
-export const ActionCell: React.FC<ActionCellProps> = ({ className, icon }) => {
-  return (
-    <div
-      role="button"
-      tabIndex={0}
-      // key="notion-table-view-add-column"
-      className={cn(
-        "flex w-8 cursor-pointer select-none justify-start opacity-100 transition-opacity duration-200 hover:bg-primary/5",
-        className,
-      )}
-    >
-      <div className="flex h-full w-8 items-center justify-center">{icon}</div>
-    </div>
-  );
-};
+export const ActionCell = forwardRef<HTMLDivElement, ActionCellProps>(
+  ({ className, icon }, ref) => {
+    return (
+      <div
+        ref={ref}
+        role="button"
+        tabIndex={0}
+        // key="notion-table-view-add-column"
+        className={cn(
+          "flex w-8 cursor-pointer select-none justify-start opacity-100 transition-opacity duration-200 hover:bg-primary/5",
+          "focus-visible:outline-none",
+          className,
+        )}
+      >
+        <div className="flex h-full w-8 items-center justify-center">
+          {icon}
+        </div>
+      </div>
+    );
+  },
+);

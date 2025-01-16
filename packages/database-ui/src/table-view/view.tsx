@@ -20,7 +20,10 @@ export const TableView: React.FC<TableViewProps> = ({
   properties = cols,
   data = mockData,
 }) => {
-  const { table, columnSizeVars } = useTableView({ properties, data });
+  const { table, columnSizeVars, addColumn } = useTableView({
+    properties,
+    data,
+  });
 
   return (
     <div
@@ -48,7 +51,10 @@ export const TableView: React.FC<TableViewProps> = ({
               >
                 <div className="relative">
                   {table.getHeaderGroups().map((headerGroup) => (
-                    <TableHeaderRow key={headerGroup.id}>
+                    <TableHeaderRow
+                      key={headerGroup.id}
+                      onSelectProp={addColumn}
+                    >
                       {headerGroup.headers.map((header) => (
                         <React.Fragment key={header.id}>
                           {flexRender(

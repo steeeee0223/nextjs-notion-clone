@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
-import { useMemo, useReducer } from "react";
+import { useCallback, useMemo, useReducer } from "react";
 import {
   getCoreRowModel,
   useReactTable,
@@ -10,55 +10,10 @@ import {
 
 // import { atom } from "jotai";
 
-import { TableHeaderCell } from "./table-header-cells";
-import { TableRowCell } from "./table-row-cells";
-import type { CellDataType, DatabaseProperty, RowDataType } from "./types";
-
-interface TableViewAtom {
-  properties: DatabaseProperty[];
-  data: RowDataType[];
-}
-
-type TableViewAction =
-  | {
-      type: "update:cell";
-      payload: { rowId: string; property: string; data: CellDataType };
-    }
-  | { type: "resize"; payload: { id: string; width: string } }
-  | { type: "reset" };
-const tableViewReducer = (
-  v: TableViewAtom,
-  a: TableViewAction,
-): TableViewAtom => {
-  switch (a.type) {
-    case "update:cell":
-      return {
-        ...v,
-        data: v.data.map((row) => {
-          if (row.id !== a.payload.rowId) return row;
-          return {
-            ...row,
-            properties: {
-              ...row.properties,
-              [a.payload.property]: a.payload.data,
-            },
-          };
-        }),
-      };
-    case "resize":
-      return {
-        ...v,
-        properties: v.properties.map((col) => {
-          if (col.id !== a.payload.id) return col;
-          return { ...col, width: a.payload.width };
-        }),
-      };
-    case "reset":
-      return { properties: [], data: [] };
-    default:
-      return v;
-  }
-};
+import { TableHeaderCell } from "../table-header-cells";
+import { TableRowCell } from "../table-row-cells";
+import type { PropertyType, RowDataType } from "../types";
+import { tableViewReducer, type TableViewAtom } from "./table-reducer";
 
 export const useTableView = (initial: TableViewAtom) => {
   // const tableViewAtom = useMemo(() => atom(initial), [initial]);
@@ -163,5 +118,16 @@ export const useTableView = (initial: TableViewAtom) => {
     table.getState().columnSizing,
   ]);
 
-  return { table, columnSizeVars };
+  const addColumn = useCallback(
+    (type: PropertyType, name: string) => {
+      const hasProp = properties.find((p) => p.name === name);
+      dispatch({
+        type: "add:col",
+        payload: { type, name: hasProp ? `${name} 1` : name },
+      });
+    },
+    [properties],
+  );
+
+  return { table, columnSizeVars, addColumn };
 };

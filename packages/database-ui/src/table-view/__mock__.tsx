@@ -1,4 +1,4 @@
-import * as Icon from "./icons";
+import { DefaultIcon } from "./default-icon";
 import type { DatabaseProperty, RowDataType } from "./types";
 
 export const cols: DatabaseProperty[] = [
@@ -6,23 +6,21 @@ export const cols: DatabaseProperty[] = [
     id: "prop-1",
     type: "title",
     name: "Name",
-    icon: <Icon.TypesTitle className="block size-4 shrink-0 fill-primary/45" />,
+    icon: <DefaultIcon type="title" className="fill-primary/45" />,
     width: "216px",
   },
   {
     id: "prop-2",
     type: "text",
     name: "Desc.",
-    icon: <Icon.TypesText className="block size-4 shrink-0 fill-primary/45" />,
+    icon: <DefaultIcon type="text" className="fill-primary/45" />,
     width: "100px",
   },
   {
     id: "prop-3",
     type: "checkbox",
     name: "Done",
-    icon: (
-      <Icon.TypesCheckbox className="block size-4 shrink-0 fill-primary/45" />
-    ),
+    icon: <DefaultIcon type="checkbox" className="fill-primary/45" />,
     width: "90px",
   },
 ];
