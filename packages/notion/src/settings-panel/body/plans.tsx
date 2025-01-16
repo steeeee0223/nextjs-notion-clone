@@ -79,7 +79,6 @@ const ActivePlan = ({ activePlan, canUpgrade }: ActivePlanProps) => {
               <Hint
                 description="Only workspace owners can perform this action."
                 className={canUpgrade ? "hidden" : "w-[174px]"}
-                triggerProps={cn(!canUpgrade && "cursor-default")}
               >
                 <Button
                   variant="blue"

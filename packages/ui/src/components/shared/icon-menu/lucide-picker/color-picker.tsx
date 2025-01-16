@@ -8,10 +8,10 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-  TooltipProvider,
 } from "@swy/ui/shadcn";
 
-import { Tooltip, type PaletteProps } from "../_components";
+import { type PaletteProps } from "../_components";
+import { Hint, HintProvider } from "../../hint";
 
 type ColorPickerProps = PaletteProps<
   Record<string, string> & { default: string }
@@ -26,18 +26,18 @@ const ColorPicker = forwardRef<HTMLButtonElement, ColorPickerProps>(
     };
 
     return (
-      <TooltipProvider delayDuration={500}>
+      <HintProvider delayDuration={500}>
         <Popover open={open} onOpenChange={setOpen}>
-          <Tooltip description="Select icon color">
+          <Hint description="Select icon color">
             <PopoverTrigger asChild ref={ref}>
               <Button variant="secondary" size="icon-md">
                 <Circle size={16} color={value} fill={value} />
               </Button>
             </PopoverTrigger>
-          </Tooltip>
+          </Hint>
           <PopoverContent className="grid w-[180px] grid-cols-5 gap-0 p-2">
             {Object.entries(palette).map(([name, color]) => (
-              <Tooltip key={name} description={name}>
+              <Hint key={name} description={name}>
                 <Button
                   variant="hint"
                   className="size-[30px] p-0"
@@ -45,11 +45,11 @@ const ColorPicker = forwardRef<HTMLButtonElement, ColorPickerProps>(
                 >
                   <Circle color={color} fill={color} size={16} />
                 </Button>
-              </Tooltip>
+              </Hint>
             ))}
           </PopoverContent>
         </Popover>
-      </TooltipProvider>
+      </HintProvider>
     );
   },
 );

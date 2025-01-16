@@ -6,6 +6,7 @@ import {
   Button,
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
@@ -25,7 +26,7 @@ interface MenuProps {
 export const Menu = ({ page, onChangeState }: MenuProps) => {
   return (
     <DropdownMenu>
-      <Hint description="Style, export, and more..." asChild>
+      <Hint description="Style, export, and more...">
         <DropdownMenuTrigger asChild>
           <Button variant="nav" size="icon-md">
             <MoreHorizontal className="size-4" />
@@ -38,12 +39,17 @@ export const Menu = ({ page, onChangeState }: MenuProps) => {
         alignOffset={8}
         forceMount
       >
-        <DropdownMenuItem onClick={() => onChangeState?.(page.id, "archive")}>
-          <Trash className="mr-2 size-4" />
-          Delete
-        </DropdownMenuItem>
+        <DropdownMenuGroup>
+          <DropdownMenuItem
+            variant="warning"
+            onClick={() => onChangeState?.(page.id, "archive")}
+          >
+            <Trash className="mr-2 size-4" />
+            Delete
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <div className="flex flex-col items-center px-2 py-1 text-xs text-muted dark:text-muted-dark">
+        <div className="flex flex-col items-center p-2 text-xs text-muted dark:text-muted-dark">
           <div className="w-full">Last edited by: {page.lastEditedBy}</div>
           <div className="w-full">{toDateString(page.lastEditedAt)}</div>
         </div>

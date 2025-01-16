@@ -102,7 +102,7 @@ export const Settings2 = () => {
             />
           }
         >
-          <Input variant="search" placeholder="Select a page shared to web" />
+          <Input search placeholder="Select a page shared to web" />
         </Content>
         <Separator className="my-4" />
         <Content title={publicSettings.content.title}>

@@ -6,7 +6,6 @@ import useSWRMutation from "swr/mutation";
 import { v4 as uuidv4 } from "uuid";
 
 import {
-  CRUDItem,
   TreeGroup,
   TreeList,
   useTree,
@@ -14,6 +13,7 @@ import {
 } from "@swy/ui/shared";
 
 import { delay } from "@/lib/utils";
+import { CRUDItem } from "./crud-item";
 
 export const AddItem = ({ group }: { group: string }) => {
   const addNode = useTree((state) => state.add);

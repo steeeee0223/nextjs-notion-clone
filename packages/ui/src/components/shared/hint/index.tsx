@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import React from "react";
 
 import {
   Tooltip,
@@ -8,31 +8,25 @@ import {
   type TooltipContentProps,
 } from "@swy/ui/shadcn";
 
-export interface HintProps extends TooltipContentProps {
-  /** @property triggerProps modifies the `className` of `TooltipTrigger`  */
-  triggerProps?: string;
-  children: ReactNode;
+interface HintProps extends TooltipContentProps {
+  children: React.ReactNode;
   description: string;
 }
 
-export const Hint = ({
+const Hint: React.FC<HintProps> = ({
   children,
-  triggerProps,
   description,
-  asChild,
   side = "bottom",
   ...props
-}: HintProps) => {
+}) => {
   return (
-    <TooltipProvider>
-      <Tooltip delayDuration={0}>
-        <TooltipTrigger asChild={asChild} className={triggerProps}>
-          {children}
-        </TooltipTrigger>
-        <TooltipContent side={side} {...props}>
-          {description}
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
+    <Tooltip>
+      <TooltipTrigger asChild>{children}</TooltipTrigger>
+      <TooltipContent side={side} {...props}>
+        {description}
+      </TooltipContent>
+    </Tooltip>
   );
 };
+
+export { Hint, TooltipProvider as HintProvider };

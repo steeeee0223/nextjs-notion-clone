@@ -78,11 +78,12 @@ export const SearchCommand = ({
     >
       <div className="z-10 flex h-12 w-full flex-shrink-0 flex-grow-0 overflow-hidden border-b bg-transparent px-1">
         <Input
-          variant="search"
+          search
+          variant="flat"
           value={input}
           onChange={(e) => onInputChange(e.target.value)}
           placeholder={`Search in ${activeWorkspace?.name ?? ""}...`}
-          className="h-full w-full min-w-0 border-none bg-transparent text-lg/[27px] dark:bg-transparent"
+          className="h-full w-full min-w-0 px-3 text-lg/[27px]"
         />
       </div>
       <CommandList
@@ -92,20 +93,22 @@ export const SearchCommand = ({
         )}
       >
         {filteredItems ? (
-          <CommandGroup heading="Best matches">
+          <CommandGroup className="py-2" heading="Best matches">
             {filteredItems.map(({ id, title, icon, type, lastEditedAt }) => (
               <CommandItem
                 key={id}
                 value={`${title}-${id}`}
                 title={title}
                 onSelect={() => handleSelect(id, type)}
-                className="group mx-1.5 flex min-h-9 items-center gap-2 py-2"
+                className="group min-h-9"
               >
-                <IconBlock
-                  icon={icon ?? generateDefaultIcon(type)}
-                  className="leading-[1.2]"
-                />
-                <span className="flex-1 text-sm font-medium">{title}</span>
+                <div className="mr-2.5 flex items-center justify-center">
+                  <IconBlock
+                    icon={icon ?? generateDefaultIcon(type)}
+                    className="leading-[1.2]"
+                  />
+                </div>
+                <div className="mr-1.5 min-w-0 flex-auto truncate">{title}</div>
                 <div className="flex-0 flex h-3 items-center text-xs text-muted dark:text-muted-dark">
                   <span className="group-aria-selected:hidden">
                     {lastEditedAt}

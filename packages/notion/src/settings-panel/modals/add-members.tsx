@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import React, { useState } from "react";
 import { CircleHelp, Mail } from "lucide-react";
 import { z } from "zod";
 
+import { useFilter, useTransition } from "@swy/ui/hooks";
 import {
   Badge,
   Button,
@@ -33,38 +34,44 @@ interface AddMembersProps {
   onAdd?: (emails: string[], role: Role) => void;
 }
 
-export const AddMembers = ({ invitedMembers, onAdd }: AddMembersProps) => {
+export const AddMembers: React.FC<AddMembersProps> = ({
+  invitedMembers,
+  onAdd,
+}) => {
   const { isOpen, setClose } = useModal();
 
   const [heading, setHeading] = useState(Heading.Select);
-  const [filteredItems, setFilteredItems] = useState<DetailedAccount[] | null>(
-    null,
-  );
-  const [emails, setEmails] = useState<string[]>([]);
-  const [input, setInput] = useState("");
   const [role, setRole] = useState<PartialRole>(Role.OWNER);
-  const [loading, startTransition] = useTransition();
-
-  const updateFilteredItems = (input: string) => {
-    const v = input.trim();
-    const result = invitedMembers.filter(
-      ({ name, email }: User) => name.includes(v) || email.includes(v),
-    );
-    setFilteredItems(
-      v.length > 0
-        ? result.length > 0
-          ? result.map((account) => ({ ...account, invited: true }))
-          : [{ id: v, email: v, name: v[0]!.toUpperCase(), avatarUrl: "" }]
-        : null,
-    );
-  };
+  /** Input & Filter */
+  const [emails, setEmails] = useState<string[]>([]);
+  const { search, results, updateSearch } = useFilter(
+    invitedMembers,
+    ({ name, email }, v) => name.includes(v) || email.includes(v),
+    { default: "empty" },
+  );
+  const filteredAccounts = results
+    ? results.map((account) => ({ ...account, invited: true }))
+    : search.length > 0
+      ? [
+          {
+            id: search,
+            email: search,
+            name: search[0]!.toUpperCase(),
+            avatarUrl: "",
+          },
+        ]
+      : null;
+  /** Actions */
+  const [invite, loading] = useTransition(() => {
+    onAdd?.(emails, role);
+    onClose();
+  });
   const onInputChange = (input: string) => {
     if (input.length > 0) {
       const result = emailSchema.safeParse(input);
       setHeading(result.success ? Heading.Select : Heading.Type);
     }
-    setInput(input);
-    updateFilteredItems(input);
+    updateSearch(input);
   };
   const onTagSelect = (value: string) => {
     const result = emailSchema.safeParse(value);
@@ -73,18 +80,12 @@ export const AddMembers = ({ invitedMembers, onAdd }: AddMembersProps) => {
       onInputChange("");
     }
   };
-  const onInvite = () =>
-    startTransition(() => {
-      onAdd?.(emails, role);
-      onClose();
-    });
   const onClose = () => {
     setClose();
     setHeading(Heading.Select);
-    setInput("");
+    updateSearch("");
     setEmails([]);
     setRole(Role.OWNER);
-    setFilteredItems(null);
   };
 
   return (
@@ -103,7 +104,7 @@ export const AddMembers = ({ invitedMembers, onAdd }: AddMembersProps) => {
               size={1}
               placeholder="Search name or emails"
               autoComplete="off"
-              value={{ tags: emails, input }}
+              value={{ tags: emails, input: search }}
               inputSchema={emailSchema}
               onTagsChange={setEmails}
               onInputChange={onInputChange}
@@ -121,7 +122,7 @@ export const AddMembers = ({ invitedMembers, onAdd }: AddMembersProps) => {
                 variant="blue"
                 size="sm"
                 disabled={emails.length < 1}
-                onClick={onInvite}
+                onClick={invite}
                 className="h-7 min-w-[70px] font-medium"
               >
                 Invite
@@ -132,7 +133,7 @@ export const AddMembers = ({ invitedMembers, onAdd }: AddMembersProps) => {
         </div>
       </div>
       <CommandList className="max-h-[300px] min-h-0 flex-grow transform overflow-auto overflow-x-hidden">
-        <CommandGroup className="min-h-[200px]" style={{ padding: 4 }}>
+        <CommandGroup className="min-h-[200px]">
           <div className="my-1.5 flex select-none fill-current px-2 text-xs font-medium leading-5 text-primary/45">
             <div className="self-center overflow-hidden overflow-ellipsis whitespace-nowrap">
               {heading}
@@ -141,7 +142,7 @@ export const AddMembers = ({ invitedMembers, onAdd }: AddMembersProps) => {
           <CommandEmpty className="flex min-h-7 select-none items-center px-2 py-0 leading-[1.2] text-secondary dark:text-secondary-dark">
             <span>Type or paste in emails above, separated by commas.</span>
           </CommandEmpty>
-          {filteredItems?.map((user) => (
+          {filteredAccounts?.map((user) => (
             <Item key={user.id} user={user} onSelect={onTagSelect} />
           ))}
         </CommandGroup>
@@ -163,23 +164,24 @@ export const AddMembers = ({ invitedMembers, onAdd }: AddMembersProps) => {
   );
 };
 
-const Item = ({
-  user: { name, email, avatarUrl, invited },
-  onSelect,
-}: {
+interface ItemProps {
   user: DetailedAccount;
   onSelect?: (value: string) => void;
+}
+
+const Item: React.FC<ItemProps> = ({
+  user: { name, email, avatarUrl, invited },
+  onSelect,
 }) => {
   return (
     <CommandItem
-      className="h-7 min-h-7 w-full leading-[1.2]"
-      style={{ padding: 0 }}
+      className="leading-[1.2]"
       key={email}
       value={email}
       onSelect={onSelect}
       disabled={invited}
     >
-      <div className="ml-2.5 mr-1 flex items-center justify-center">
+      <div className="mr-2.5 flex items-center justify-center">
         {invited ? (
           <div className="relative">
             <img
@@ -192,14 +194,14 @@ const Item = ({
           <Mail className="size-5 flex-shrink-0 text-primary" />
         )}
       </div>
-      <div className="ml-1.5 mr-3 min-w-0 flex-1">
-        <div className="truncate">{invited ? name : email}</div>
+      <div className="mr-3 min-w-0 flex-auto truncate">
+        {invited ? name : email}
       </div>
       {invited && (
         <Badge
           variant="gray"
           size="sm"
-          className="mr-3 uppercase tracking-wide"
+          className="ml-auto uppercase tracking-wide"
         >
           Invited
         </Badge>

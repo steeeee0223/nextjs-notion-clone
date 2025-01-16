@@ -5,6 +5,7 @@ import {
   Button,
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
@@ -29,11 +30,7 @@ export const ActionGroup: React.FC<ActionGroupProps> = ({
   return (
     <div className="ml-auto flex items-center p-0.5">
       <DropdownMenu>
-        <Hint
-          asChild
-          side="bottom"
-          description="Delete, duplicate, and more..."
-        >
+        <Hint description="Delete, duplicate, and more...">
           <DropdownMenuTrigger onClick={(e) => e.stopPropagation()} asChild>
             <Button
               variant="hint"
@@ -50,18 +47,20 @@ export const ActionGroup: React.FC<ActionGroupProps> = ({
           forceMount
           onClick={(e) => e.stopPropagation()}
         >
-          <DropdownMenuItem onClick={onDelete}>
-            <Trash className="mr-2 size-4" />
-            Delete
-          </DropdownMenuItem>
+          <DropdownMenuGroup>
+            <DropdownMenuItem variant="warning" onClick={onDelete}>
+              <Trash className="mr-2 size-4" />
+              Delete
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
           <DropdownMenuSeparator />
-          <div className="flex flex-col items-center px-2 py-1 text-xs text-muted dark:text-muted-dark">
+          <div className="flex flex-col items-center p-2 text-xs text-muted dark:text-muted-dark">
             <div className="w-full">Last edited by: {lastEditedBy}</div>
             <div className="w-full">{toDateString(lastEditedAt)}</div>
           </div>
         </DropdownMenuContent>
       </DropdownMenu>
-      <Hint asChild side="bottom" description="Add a page inside">
+      <Hint description="Add a page inside">
         <Button
           variant="hint"
           className="ml-auto size-auto rounded-sm p-0.5 opacity-0 group-hover:opacity-100"

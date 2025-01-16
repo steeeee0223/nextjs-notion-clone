@@ -51,7 +51,7 @@ export const Publish = ({ page, onUpdate }: PublishProps) => {
 
   return (
     <Popover>
-      <Hint description="Share or publish to the web" asChild>
+      <Hint description="Share or publish to the web">
         <PopoverTrigger asChild>
           <Button
             size="sm"
@@ -83,6 +83,7 @@ export const Publish = ({ page, onUpdate }: PublishProps) => {
                 </div>
                 <div className="flex items-center">
                   <Input
+                    variant="plain"
                     className="flex-1 truncate rounded-r-none border-r-0"
                     value={url}
                     disabled

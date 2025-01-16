@@ -5,7 +5,7 @@ import { MenuIcon } from "lucide-react";
 
 import { cn } from "@swy/ui/lib";
 import { Button } from "@swy/ui/shadcn";
-import { Hint } from "@swy/ui/shared";
+import { Hint, HintProvider } from "@swy/ui/shared";
 
 import { usePage } from "../page-provider";
 import {
@@ -34,43 +34,47 @@ export const Navbar = forwardRef<HTMLDivElement, NavbarProps>(function Navbar(
   const { page, isLoading, fetchLogs, onUpdate, onChangeState } = usePage();
 
   return (
-    <div ref={ref} className={className}>
-      <nav className={styles.nav}>
-        {isCollapsed && (
-          <Hint asChild description="Open sidebar" side="right">
-            <Button
-              variant="hint"
-              onClick={onResetWidth}
-              className="size-6 p-0 transition"
-            >
-              <MenuIcon className="size-4" />
-            </Button>
-          </Hint>
-        )}
-        {isLoading ? (
-          <Title.Skeleton />
-        ) : page ? (
-          <div className="flex w-full items-center justify-between gap-6">
-            <Title
-              page={page}
-              onUpdate={(id, title) => onUpdate?.(id, { title })}
-            />
-            <div className="z-30 flex items-center gap-x-1">
-              <Participants />
-              <Publish
+    <HintProvider delayDuration={500}>
+      <div ref={ref} className={className}>
+        <nav className={styles.nav}>
+          {isCollapsed && (
+            <Hint description="Open sidebar" side="right">
+              <Button
+                variant="hint"
+                onClick={onResetWidth}
+                className="size-6 p-0 transition"
+              >
+                <MenuIcon className="size-4" />
+              </Button>
+            </Hint>
+          )}
+          {isLoading ? (
+            <Title.Skeleton />
+          ) : page ? (
+            <div className="flex w-full items-center justify-between gap-6">
+              <Title
                 page={page}
-                onUpdate={(id, isPublished) => onUpdate?.(id, { isPublished })}
+                onUpdate={(id, title) => onUpdate?.(id, { title })}
               />
-              <History pageId={page.id} fetchLogs={fetchLogs} />
-              <Menu page={page} onChangeState={onChangeState} />
+              <div className="z-30 flex items-center gap-x-1">
+                <Participants />
+                <Publish
+                  page={page}
+                  onUpdate={(id, isPublished) =>
+                    onUpdate?.(id, { isPublished })
+                  }
+                />
+                <History pageId={page.id} fetchLogs={fetchLogs} />
+                <Menu page={page} onChangeState={onChangeState} />
+              </div>
             </div>
-          </div>
-        ) : null}
-      </nav>
-      {page?.isArchived && (
-        <Banner pageId={page.id} onChangeState={onChangeState} />
-      )}
-    </div>
+          ) : null}
+        </nav>
+        {page?.isArchived && (
+          <Banner pageId={page.id} onChangeState={onChangeState} />
+        )}
+      </div>
+    </HintProvider>
   );
 });
 

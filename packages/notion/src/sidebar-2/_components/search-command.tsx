@@ -3,6 +3,7 @@
 import React from "react";
 import { ArrowUpDown } from "lucide-react";
 
+import { useFilter } from "@swy/ui/hooks";
 import { cn } from "@swy/ui/lib";
 import {
   CommandDialog,
@@ -17,7 +18,6 @@ import { IconBlock, useModal } from "@swy/ui/shared";
 
 import { generateDefaultIcon, Icon, toDateString } from "../../common";
 import { selectPages, usePlatformStore } from "../../slices";
-import { useFilter } from "../use-filter";
 
 interface SearchCommandProps {
   workspaceName: string;
@@ -32,7 +32,9 @@ export const SearchCommand: React.FC<SearchCommandProps> = ({
 }) => {
   const { isOpen, setClose } = useModal();
   const pages = usePlatformStore((state) => selectPages(state, false));
-  const { filteredItems, updateSearch } = useFilter(pages);
+  const { search, results, updateSearch } = useFilter(pages, (page, v) =>
+    page.title.toLowerCase().includes(v),
+  );
   /** Search */
   const jumpToTrash = () => {
     setClose();
@@ -52,34 +54,39 @@ export const SearchCommand: React.FC<SearchCommandProps> = ({
     >
       <div className="z-10 flex h-12 w-full flex-shrink-0 flex-grow-0 overflow-hidden border-b bg-transparent px-1">
         <Input
-          variant="search"
-          // value={input}
+          search
+          clear
+          variant="flat"
+          value={search}
           onChange={(e) => updateSearch(e.target.value)}
+          onCancel={() => updateSearch("")}
           placeholder={`Search in ${workspaceName}...`}
-          className="h-full w-full min-w-0 border-none bg-transparent text-lg/[27px] dark:bg-transparent"
+          className="h-full w-full min-w-0 px-3 text-lg/[27px]"
         />
       </div>
       <CommandList
         className={cn(
           "h-full min-h-0 flex-grow transform",
-          !filteredItems && "flex flex-col justify-center",
+          !results && "flex flex-col justify-center",
         )}
       >
-        {filteredItems ? (
-          <CommandGroup heading="Best matches">
-            {filteredItems.map(({ id, title, icon, type, lastEditedAt }) => (
+        {results ? (
+          <CommandGroup className="py-2" heading="Best matches">
+            {results.map(({ id, title, icon, type, lastEditedAt }) => (
               <CommandItem
                 key={id}
                 value={`${title}-${id}`}
                 title={title}
                 onSelect={() => handleSelect(id, type)}
-                className="group mx-1.5 flex min-h-9 items-center gap-2 py-2"
+                className="group min-h-9"
               >
-                <IconBlock
-                  icon={icon ?? generateDefaultIcon(type)}
-                  className="leading-[1.2]"
-                />
-                <span className="flex-1 text-sm font-medium">{title}</span>
+                <div className="mr-2.5 flex items-center justify-center">
+                  <IconBlock
+                    icon={icon ?? generateDefaultIcon(type)}
+                    className="leading-[1.2]"
+                  />
+                </div>
+                <div className="mr-1.5 min-w-0 flex-auto truncate">{title}</div>
                 <div className="flex-0 flex h-3 items-center text-xs text-muted dark:text-muted-dark">
                   <span className="group-aria-selected:hidden">
                     {toDateString(lastEditedAt)}

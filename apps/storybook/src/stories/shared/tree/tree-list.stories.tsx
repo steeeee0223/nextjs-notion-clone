@@ -1,8 +1,9 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { CRUDItem, TreeGroup, TreeList } from "@swy/ui/shared";
+import { TreeGroup, TreeList } from "@swy/ui/shared";
 
+import { CRUDItem } from "./crud-item";
 import { folderNodes } from "./data";
 
 const meta = {

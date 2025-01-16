@@ -38,7 +38,7 @@ export const History = ({ pageId, fetchLogs }: HistoryProps) => {
 
   return (
     <Drawer direction="right" open={open} onOpenChange={setOpen}>
-      <Hint description={hint} asChild>
+      <Hint description={hint}>
         <DrawerTrigger asChild>
           <Button variant="nav" size="icon-md" onClick={handleClick}>
             <HistoryIcon className="size-4" />
@@ -51,7 +51,7 @@ export const History = ({ pageId, fetchLogs }: HistoryProps) => {
         noTitle
       >
         <div className="absolute left-0 top-0 ml-2.5 flex h-12 items-center">
-          <Hint asChild description="Close panel">
+          <Hint description="Close panel">
             <Button
               variant="hint"
               onClick={() => setOpen(false)}

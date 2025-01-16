@@ -57,5 +57,5 @@ export const useUnsplash = ({ apiKey }: UnsplashConfig) => {
     );
   }, [unsplash, query]);
 
-  return { isLoading, images, setQuery };
+  return { isLoading, images, query, setQuery };
 };

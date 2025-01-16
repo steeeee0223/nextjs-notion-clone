@@ -8,6 +8,9 @@ const meta = {
   component: Button,
   parameters: { layout: "centered" },
   tags: ["autodocs"],
+  argTypes: {
+    disabled: { type: "boolean" },
+  },
 } satisfies Meta<typeof Button>;
 
 export default meta;

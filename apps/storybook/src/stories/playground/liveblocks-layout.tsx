@@ -7,7 +7,6 @@ import {
   PageProvider,
   Sidebar2,
   usePlatformStore,
-  useSettingsStore2,
   WorkspaceSwitcher2,
 } from "@swy/notion";
 import { mockLogs, mockPages, mockSettings } from "@swy/notion/mock";
@@ -35,18 +34,16 @@ export const LayoutWithLiveblocks = ({ children }: LayoutProps) => {
   const { minSize, ref, collapse, expand, isResizing, isMobile, isCollapsed } =
     useSidebarLayout("group", "sidebar", 240);
   /** Bound stores */
-  // const activeWorkspace = usePlatformStore((state) => state.activeWorkspace);
-  const activeWorkspace = useSettingsStore2(
-    (state) => state.settings.workspace,
-  );
+  const wid = usePlatformStore((state) => state.activeWorkspace);
   const workspaces = usePlatformStore((state) => state.workspaces);
   const user = usePlatformStore((state) => state.user);
   const setActiveWorkspace = usePlatformStore(
     (state) => state.setActiveWorkspace,
   );
-  const { pageId, isLoading, selectPage, updatePage, deletePage } = usePages(
-    activeWorkspace.id,
-  );
+  const { pageId, isLoading, selectPage, updatePage, deletePage } =
+    usePages(wid);
+
+  const activeWorkspace = workspaces[wid!]!;
 
   const openSettings = () =>
     setOpen(<SettingsModal initialData={mockSettings} />);
@@ -82,7 +79,7 @@ export const LayoutWithLiveblocks = ({ children }: LayoutProps) => {
           WorkspaceSwitcher={
             <WorkspaceSwitcher2
               user={user!}
-              activeWorkspace={workspaces[activeWorkspace.id]!}
+              activeWorkspace={activeWorkspace}
               workspaces={Object.values(workspaces)}
               onSelect={setActiveWorkspace}
             />
