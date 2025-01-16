@@ -11,11 +11,15 @@ import { CellTrigger } from "./cell-trigger";
 
 interface CheckboxCellProps {
   checked: boolean;
+  onChange?: (check: boolean) => void;
 }
 
-export const CheckboxCell: React.FC<CheckboxCellProps> = ({ checked }) => {
+export const CheckboxCell: React.FC<CheckboxCellProps> = ({
+  checked,
+  onChange,
+}) => {
   return (
-    <CellTrigger className="py-2">
+    <CellTrigger className="py-2" onPointerDown={() => onChange?.(!checked)}>
       <div className="max-w-full">
         <div
           key="pseudoHover pseudoActive"
@@ -32,8 +36,12 @@ export const CheckboxCell: React.FC<CheckboxCellProps> = ({ checked }) => {
             )}
           </div>
           <input
-            checked={checked}
             type="checkbox"
+            checked={checked}
+            onChange={(e) => {
+              e.stopPropagation();
+              onChange?.(e.target.checked);
+            }}
             className="absolute left-0 top-0 size-4 cursor-pointer opacity-0"
           />
         </div>

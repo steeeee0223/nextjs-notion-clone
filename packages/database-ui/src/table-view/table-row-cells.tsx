@@ -13,8 +13,12 @@ enum CellMode {
   Select = "select",
 }
 
-interface TableRowCellProps {
+interface DataCellProps {
   data: CellType;
+  onChange?: (data: CellType) => void;
+}
+
+interface TableRowCellProps extends DataCellProps {
   rowId: number;
   colId: number;
   width?: string;
@@ -25,6 +29,7 @@ export const TableRowCell: React.FC<TableRowCellProps> = ({
   rowId,
   colId,
   width,
+  onChange,
 }) => {
   const [mode] = useState<CellMode>(CellMode.Normal);
 
@@ -37,7 +42,7 @@ export const TableRowCell: React.FC<TableRowCellProps> = ({
       style={{ width }}
     >
       <div className="flex h-full overflow-x-clip" style={{ width }}>
-        <DataCell data={data} />
+        <DataCell data={data} onChange={onChange} />
       </div>
       {mode === CellMode.Select && (
         <div className="shadow-cell pointer-events-none absolute left-0 top-0 z-[840] h-full w-full rounded-[3px] bg-blue/5" />
@@ -46,14 +51,29 @@ export const TableRowCell: React.FC<TableRowCellProps> = ({
   );
 };
 
-const DataCell: React.FC<{ data: CellType }> = ({ data }) => {
+const DataCell: React.FC<DataCellProps> = ({ data, onChange }) => {
   switch (data.type) {
     case "title":
-      return <TitleCell value={data.value} />;
+      return (
+        <TitleCell
+          value={data.value}
+          onChange={(value) => onChange?.({ type: "title", value })}
+        />
+      );
     case "text":
-      return <TextCell value={data.value} />;
+      return (
+        <TextCell
+          value={data.value}
+          onChange={(value) => onChange?.({ type: "text", value })}
+        />
+      );
     case "checkbox":
-      return <CheckboxCell checked={data.checked} />;
+      return (
+        <CheckboxCell
+          checked={data.checked}
+          onChange={(checked) => onChange?.({ type: "checkbox", checked })}
+        />
+      );
     default:
       return null;
   }

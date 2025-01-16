@@ -105,15 +105,15 @@ export const TableView: React.FC<TableViewProps> = ({
           role="button"
           tabIndex={0}
           key="notion-table-view-add-row"
-          className="transition-background-in flex h-[33px] w-full cursor-pointer select-none items-center bg-white pl-2 leading-5"
+          className="transition-background-in flex h-[33px] w-full cursor-pointer select-none items-center bg-white pl-2 leading-5 hover:bg-primary/5"
         >
-          <span className="sticky left-10 inline-flex items-center text-sm text-muted opacity-100 transition-opacity duration-200 hover:bg-primary/5 dark:text-muted-dark">
+          <span className="sticky left-10 inline-flex items-center text-sm text-muted opacity-100 transition-opacity duration-200 dark:text-muted-dark">
             <Icon.Plus className="ml-[1px] mr-[7px] block size-[14px] shrink-0 fill-primary/35" />
             New page
           </span>
         </div>
         <div
-          contentEditable="false"
+          // contentEditable="false"
           key="pseudoSelection"
           data-content-editable-void="true"
           className="--pseudoSelection--background: transparent; clip-path: polygon(0% -20%, 100% -20%, 100% 100%, 0% 100%); box-sizing: border-box; left-0 z-[850] flex h-[32px] min-w-full select-none border-t border-t-border-cell bg-white text-sm"
