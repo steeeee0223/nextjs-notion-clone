@@ -130,7 +130,6 @@ export const Sidebar2 = forwardRef<HTMLElement, SidebarProps>(function Sidebar(
           icon={GitPullRequestArrow}
           label="Workflows"
           hint="Manage your workflows"
-          onClick={() => redirect?.(`/workflow`)}
         />
         <HintItem
           icon={CirclePlus}
