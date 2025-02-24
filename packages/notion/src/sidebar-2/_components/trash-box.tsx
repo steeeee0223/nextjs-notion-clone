@@ -1,15 +1,14 @@
-/* eslint-disable jsx-a11y/interactive-supports-focus */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
 "use client";
 
 import React from "react";
 import { HelpCircle, Trash, Undo } from "lucide-react";
 
+import { useFilter } from "@swy/ui/hooks";
 import { cn } from "@swy/ui/lib";
 import {
   Button,
-  buttonVariants,
   Input,
+  menuItemVariants,
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -18,7 +17,6 @@ import { Hint, IconBlock, useModal } from "@swy/ui/shared";
 
 import { BaseModal } from "../../common";
 import { selectPages, usePlatformStore } from "../../slices";
-import { useFilter } from "../use-filter";
 import { HintItem } from "./hint-item";
 
 interface TrashBoxProps {
@@ -39,7 +37,9 @@ export const TrashBox = ({
 }: TrashBoxProps) => {
   const { setOpen } = useModal();
   const pages = usePlatformStore((state) => selectPages(state, true));
-  const { filteredItems, updateSearch } = useFilter(pages);
+  const { search, results, updateSearch } = useFilter(pages, (page, v) =>
+    page.title.toLowerCase().includes(v),
+  );
   /** Select */
   const handleSelect = (id: string, type: string) => {
     onSelect?.(id, type);
@@ -65,10 +65,6 @@ export const TrashBox = ({
     );
   };
 
-  // useEffect(() => {
-  //   setFilteredItems(pages);
-  // }, [pages]);
-
   return (
     <Popover open={isOpen} onOpenChange={onOpenChange}>
       <PopoverTrigger asChild>
@@ -88,13 +84,15 @@ export const TrashBox = ({
       >
         <div className="flex w-full items-center px-3 py-2.5">
           <Input
-            // value={search}
+            clear
+            value={search}
             onChange={(e) => updateSearch(e.target.value)}
+            onCancel={() => updateSearch("")}
             placeholder="Search pages in Trash"
           />
         </div>
         <div className="flex h-full flex-grow overflow-y-auto py-1.5">
-          {!filteredItems || filteredItems.length === 0 ? (
+          {!results || results.length === 0 ? (
             <div className="flex w-full flex-col items-center justify-center gap-2">
               <Trash className="block size-9 flex-shrink-0 text-[#c7c6c4]" />
               <div className="flex flex-col text-center text-sm text-[#787774]">
@@ -103,36 +101,36 @@ export const TrashBox = ({
             </div>
           ) : (
             <div className="mt-2 flex w-full flex-col px-1 pb-1 text-sm">
-              {filteredItems.map(({ id, title, type, icon }) => (
+              {results.map(({ id, title, type, icon }) => (
                 <div
                   key={id}
-                  role="button"
+                  id={id}
+                  tabIndex={-1}
+                  role="menuitem"
                   onClick={() => handleSelect(id, type)}
-                  className={cn(
-                    buttonVariants({ variant: "item" }),
-                    "w-full justify-between px-2",
-                  )}
+                  onKeyDown={() => handleSelect(id, type)}
+                  className={cn(menuItemVariants())}
                 >
-                  <div className="flex items-center gap-x-1 pl-2">
+                  <div className="mr-2.5 flex items-center justify-center">
                     <IconBlock icon={icon ?? { type: "text", text: title }} />
-                    <span className="truncate">{title}</span>
                   </div>
-                  <div className="flex items-center gap-x-1 p-1">
-                    <Hint asChild side="bottom" description="Restore">
+                  <div className="mr-1.5 min-w-0 flex-auto truncate">
+                    {title}
+                  </div>
+                  <div className="flex min-w-0 flex-none gap-1">
+                    <Hint description="Restore">
                       <Button
                         variant="hint"
                         size="icon-sm"
-                        className="p-1"
                         onClick={(e) => handleRestore(e, id)}
                       >
                         <Undo className="size-4" />
                       </Button>
                     </Hint>
-                    <Hint asChild side="bottom" description="Delete from Trash">
+                    <Hint description="Delete from Trash">
                       <Button
                         variant="hint"
                         size="icon-sm"
-                        className="p-1"
                         onClick={(e) => handleDelete(e, id)}
                       >
                         <Trash className="size-4" />

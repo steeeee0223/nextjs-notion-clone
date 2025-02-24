@@ -9,6 +9,7 @@ import {
   Button,
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
@@ -182,10 +183,12 @@ export const MemberActionCell = ({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuItem variant="warning" onClick={remove}>
-          <Icon.Bye className="mr-2 size-4 flex-shrink-0 fill-red" />
-          {isSelf ? "Leave workspace" : "Remove from workspace"}
-        </DropdownMenuItem>
+        <DropdownMenuGroup>
+          <DropdownMenuItem variant="error" onClick={remove}>
+            <Icon.Bye className="mr-2 size-4 fill-red" />
+            {isSelf ? "Leave workspace" : "Remove from workspace"}
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>
   );
@@ -250,15 +253,19 @@ export const GuestActionCell = ({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuItem>
-          <CircleArrowUp className="mr-2 size-4" onClick={upgrade} />
-          Upgrade to member
-        </DropdownMenuItem>
+        <DropdownMenuGroup>
+          <DropdownMenuItem>
+            <CircleArrowUp className="mr-2 size-4" onClick={upgrade} />
+            Upgrade to member
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem variant="warning" onClick={remove}>
-          <Icon.Bye className="mr-2 size-4 flex-shrink-0 fill-red" />
-          Remove from workspace
-        </DropdownMenuItem>
+        <DropdownMenuGroup>
+          <DropdownMenuItem variant="error" onClick={remove}>
+            <Icon.Bye className="mr-2 size-4 fill-red" />
+            Remove from workspace
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>
   );

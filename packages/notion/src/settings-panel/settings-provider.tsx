@@ -4,7 +4,7 @@ import { useEffect, useMemo } from "react";
 import { useTheme } from "next-themes";
 
 import { I18nProvider } from "@swy/i18n";
-import { ModalProvider } from "@swy/ui/shared";
+import { HintProvider, ModalProvider } from "@swy/ui/shared";
 
 import { getScopes } from "../scopes";
 import type { UploadFile } from "../types";
@@ -95,11 +95,13 @@ export function SettingsProvider({
 
   return (
     <I18nProvider language={account.language} defaultNS="settings">
-      <SettingsContext.Provider value={context}>
-        <ModalProvider>
-          <SettingsPanel />
-        </ModalProvider>
-      </SettingsContext.Provider>
+      <HintProvider delayDuration={500}>
+        <SettingsContext.Provider value={context}>
+          <ModalProvider>
+            <SettingsPanel />
+          </ModalProvider>
+        </SettingsContext.Provider>
+      </HintProvider>
     </I18nProvider>
   );
 }

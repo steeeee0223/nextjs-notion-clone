@@ -1,16 +1,16 @@
 "use client";
 
-import { forwardRef, useState } from "react";
+import React, { forwardRef, useState } from "react";
 
 import {
   Button,
   Popover,
   PopoverContent,
   PopoverTrigger,
-  TooltipProvider,
 } from "@swy/ui/shadcn";
 
-import { Tooltip, type PaletteProps } from "../_components";
+import { type PaletteProps } from "../_components";
+import { Hint, HintProvider } from "../../hint";
 import type { Skin } from "./types";
 
 type SkinPickerProps = PaletteProps<
@@ -26,9 +26,9 @@ export const SkinPicker = forwardRef<HTMLButtonElement, SkinPickerProps>(
     };
 
     return (
-      <TooltipProvider delayDuration={500}>
+      <HintProvider delayDuration={500}>
         <Popover open={open} onOpenChange={setOpen}>
-          <Tooltip description="Select skin tone">
+          <Hint description="Select skin tone">
             <PopoverTrigger asChild ref={ref}>
               <Button
                 variant="hint"
@@ -38,10 +38,10 @@ export const SkinPicker = forwardRef<HTMLButtonElement, SkinPickerProps>(
                 {palette[value].emoji}
               </Button>
             </PopoverTrigger>
-          </Tooltip>
+          </Hint>
           <PopoverContent className="grid w-[200px] grid-cols-6 gap-0 p-1">
             {Object.entries(palette).map(([id, { emoji, name }]) => (
-              <Tooltip key={id} sideOffset={8} description={name}>
+              <Hint key={id} sideOffset={8} description={name}>
                 <Button
                   variant="hint"
                   className="size-8 p-0 text-2xl text-primary dark:text-primary/80"
@@ -49,11 +49,11 @@ export const SkinPicker = forwardRef<HTMLButtonElement, SkinPickerProps>(
                 >
                   {emoji}
                 </Button>
-              </Tooltip>
+              </Hint>
             ))}
           </PopoverContent>
         </Popover>
-      </TooltipProvider>
+      </HintProvider>
     );
   },
 );

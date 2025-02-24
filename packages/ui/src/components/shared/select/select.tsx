@@ -57,12 +57,7 @@ const CustomSelect = <T extends string = string>({
       <SelectContent position="popper" side={side} align={align}>
         <SelectGroup>
           {Object.entries<string | Option>(options).map(([key, option]) => (
-            <SelectItem
-              className="min-h-7 min-w-0 flex-auto justify-between gap-x-6"
-              value={key}
-              key={key}
-              hideCheck={hideCheck}
-            >
+            <SelectItem value={key} key={key} hideCheck={hideCheck}>
               <div className="flex items-center truncate">
                 {typeof option === "string" ? option : option.label}
               </div>

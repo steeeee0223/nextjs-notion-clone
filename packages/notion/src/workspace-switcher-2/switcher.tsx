@@ -17,10 +17,6 @@ import type { User } from "@swy/validators";
 import type { Workspace } from "../workspace-provider";
 import { HeaderDropdown, WorkspaceList } from "./_components";
 
-const styles = {
-  action: "w-full text-xs text-secondary dark:text-secondary-dark",
-};
-
 interface WorkspaceSwitcherProps {
   user: User;
   activeWorkspace: Workspace;
@@ -70,32 +66,44 @@ export const WorkspaceSwitcher2: React.FC<WorkspaceSwitcherProps> = ({
         alignOffset={11}
         forceMount
       >
-        <DropdownMenuGroup className="flex flex-col space-y-2 p-1">
-          <div className="flex items-center">
-            <p className="flex-1 text-xs font-medium leading-none text-secondary dark:text-secondary-dark">
-              {user.email}
-            </p>
-            <HeaderDropdown
-              onLogout={onLogout}
-              onCreateWorkspace={onCreateWorkspace}
-            />
+        <div className="mx-3 mt-2 flex h-5 items-center justify-between">
+          <div className="mr-1.5 truncate text-xs font-medium text-secondary dark:text-secondary-dark">
+            {user.email}
           </div>
-          <WorkspaceList
-            workspaces={workspaces}
-            activeWorkspace={activeWorkspace}
-            onSelect={onSelect}
+          <HeaderDropdown
+            onLogout={onLogout}
+            onCreateWorkspace={onCreateWorkspace}
           />
+        </div>
+        <WorkspaceList
+          workspaces={workspaces}
+          activeWorkspace={activeWorkspace}
+          onSelect={onSelect}
+        />
+        <DropdownMenuSeparator />
+        <DropdownMenuGroup>
+          <DropdownMenuItem
+            variant="secondary"
+            className="text-xs"
+            onClick={onCreateAccount}
+          >
+            Add another account
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            variant="secondary"
+            className="text-xs"
+            onClick={onLogout}
+          >
+            Log out
+          </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem className={styles.action} onClick={onCreateAccount}>
-            Add another account
-          </DropdownMenuItem>
-          <DropdownMenuItem className={styles.action} onClick={onLogout}>
-            Log out
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem className={styles.action} onClick={handleGetMac}>
+          <DropdownMenuItem
+            variant="secondary"
+            className="text-xs"
+            onClick={handleGetMac}
+          >
             Get Mac App
           </DropdownMenuItem>
         </DropdownMenuGroup>

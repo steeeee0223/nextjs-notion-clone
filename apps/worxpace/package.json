@@ -32,7 +32,6 @@
     "next": "catalog:next14",
     "react": "catalog:react18",
     "react-dom": "catalog:react18",
-    "react-textarea-autosize": "^8.5.3",
     "sonner": "catalog:ui",
     "swr": "^2.2.5",
     "yjs": "^13.6.15",

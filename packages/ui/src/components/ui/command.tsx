@@ -7,13 +7,7 @@ import { Command as CommandPrimitive } from "cmdk";
 import { cn } from "@swy/ui/lib";
 
 import { Dialog, DialogContent } from "./dialog";
-import {
-  buttonVariants,
-  inputVariants,
-  separatorVariants,
-  type ButtonVariants,
-  type InputVariants,
-} from "./variants";
+import { inputVariants, menuItemVariants, separatorVariants } from "./variants";
 
 type CommandProps = React.ComponentPropsWithoutRef<typeof CommandPrimitive>;
 const Command = React.forwardRef<
@@ -36,7 +30,7 @@ interface CommandDialogProps
     Pick<CommandProps, "shouldFilter"> {
   className?: string;
 }
-
+/** @version 1.5 */
 const CommandDialog = ({
   className,
   shouldFilter,
@@ -52,8 +46,8 @@ const CommandDialog = ({
       >
         <Command
           shouldFilter={shouldFilter}
-          className="focus-visible:outline-none dark:text-muted-dark [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-group]]:px-2 [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 [&_[cmdk-input]]:h-12"
-          // [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5
+          className="focus-visible:outline-none dark:text-muted-dark [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 [&_[cmdk-input]]:h-12"
+          // [&_[cmdk-group]]:px-2 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5
         >
           {children}
         </Command>
@@ -62,19 +56,23 @@ const CommandDialog = ({
   );
 };
 
-interface CommandInputProps
-  extends React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input>,
-    InputVariants {}
+type CommandInputProps = React.ComponentPropsWithoutRef<
+  typeof CommandPrimitive.Input
+>;
+/** @version 1.5 */
 const CommandInput = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive.Input>,
   CommandInputProps
->(({ className, variant = "search", ...props }, ref) => (
-  <div className="flex items-center border-b px-3" cmdk-input-wrapper="">
-    <CommandPrimitive.Input
-      ref={ref}
-      className={cn(inputVariants({ variant, className }))}
-      {...props}
-    />
+>(({ className, ...props }, ref) => (
+  <div
+    className={cn(
+      inputVariants({ variant: "flat" }),
+      "border-b px-3",
+      className,
+    )}
+    cmdk-input-wrapper=""
+  >
+    <CommandPrimitive.Input ref={ref} {...props} />
   </div>
 ));
 
@@ -113,7 +111,7 @@ const CommandGroup = React.forwardRef<
   <CommandPrimitive.Group
     ref={ref}
     className={cn(
-      "overflow-hidden p-1 text-muted dark:text-muted-dark [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted",
+      "overflow-hidden py-1 text-muted dark:text-muted-dark [&_[cmdk-group-heading]]:px-3.5 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted",
       className,
     )}
     {...props}
@@ -137,23 +135,23 @@ const CommandSeparator = React.forwardRef<
 ));
 CommandSeparator.displayName = CommandPrimitive.Separator.displayName;
 
-interface CommandItemProps
-  extends React.ComponentPropsWithoutRef<typeof CommandPrimitive.Item>,
-    ButtonVariants {}
+type CommandItemProps = React.ComponentPropsWithoutRef<
+  typeof CommandPrimitive.Item
+>;
+/** @version 1.5 */
 const CommandItem = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive.Item>,
   CommandItemProps
->(({ className, size = "sm", ...props }, ref) => (
+>(({ className, disabled, ...props }, ref) => (
   <CommandPrimitive.Item
     ref={ref}
     className={cn(
-      buttonVariants({ variant: "item", size }),
-      "px-2 py-1.5 aria-selected:bg-primary/5 aria-selected:text-primary dark:aria-selected:text-primary/80",
-      // this is tricky...
-      "data-[disabled]:pointer-events-auto data-[disabled]:opacity-100",
-      "data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50",
+      menuItemVariants({ disabled }),
+      "aria-selected:bg-primary/5 aria-selected:text-primary dark:aria-selected:text-primary/80",
+      "data-[disabled=true]:text-muted data-[disabled=true]:dark:text-muted-dark",
       className,
     )}
+    disabled={disabled}
     {...props}
   />
 ));

@@ -1,24 +1,29 @@
 import { cva, type VariantProps } from "class-variance-authority";
 
 export const buttonVariants = cva(
-  "inline-flex cursor-pointer select-none items-center justify-center whitespace-nowrap rounded-sm text-sm font-normal transition-colors focus-visible:outline-none disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50",
+  "inline-flex animate-bg-in cursor-pointer select-none items-center justify-center whitespace-nowrap rounded-sm text-sm font-normal hover:bg-primary/5 focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-transparent disabled:opacity-50",
   {
     variants: {
       variant: {
-        primary: "border border-border-button hover:bg-primary/5",
-        secondary:
-          "border border-border-button text-icon hover:bg-primary/5 dark:text-icon-dark",
-        nav: "text-icon hover:bg-primary/5 dark:text-icon-dark",
-        item: "relative flex justify-normal text-primary hover:bg-primary/5 data-[disabled]:pointer-events-none data-[disabled]:opacity-50 dark:text-primary/80",
-        subitem:
-          "relative flex text-secondary hover:bg-primary/5 dark:text-secondary-dark",
-        link: "text-primary underline-offset-4 hover:underline dark:text-icon-dark dark:text-primary/80",
-        blue: "border border-border bg-blue font-medium text-white shadow-sm hover:bg-blue-hover hover:text-white",
-        "soft-blue": "bg-blue/5 text-blue shadow-sm hover:bg-blue/15",
-        hint: "font-medium text-muted hover:bg-primary/5 dark:text-muted-dark",
+        primary: "border border-border-button",
+        secondary: "border border-border-button text-icon dark:text-icon-dark",
+        nav: "text-icon dark:text-icon-dark",
+        item: "relative flex justify-normal text-primary data-[disabled]:pointer-events-none data-[disabled]:opacity-50 dark:text-primary/80",
+        subitem: "relative flex text-secondary dark:text-secondary-dark",
+        link: "text-primary underline-offset-4 hover:bg-transparent hover:underline dark:text-icon-dark dark:text-primary/80",
+        blue: "border border-border bg-blue font-medium text-white shadow-sm hover:bg-blue-hover hover:text-white disabled:bg-blue",
+        "soft-blue":
+          "bg-blue/5 text-blue shadow-sm hover:bg-blue/15 disabled:bg-blue/5",
+        hint: "font-medium text-muted dark:text-muted-dark",
         red: "border border-red/50 text-red hover:bg-red/10 focus:bg-red/10",
-        "red:fill": "bg-red text-white hover:bg-red/65 dark:hover:bg-red/35",
-        white: "border border-white text-white hover:bg-primary/5",
+        "red:fill":
+          "bg-red text-white hover:bg-red/65 disabled:bg-red dark:hover:bg-red/35",
+        white: "border border-white text-white",
+        /**
+         * For close icon only
+         */
+        close:
+          "flex size-[18px] shrink-0 rounded-full bg-primary/5 hover:bg-primary/15 dark:hover:bg-primary/0",
       },
       size: {
         xs: "h-6 px-1.5 text-xs",
@@ -28,6 +33,7 @@ export const buttonVariants = cva(
         icon: "size-9 rounded-md",
         "icon-sm": "size-5",
         "icon-md": "size-7",
+        circle: "rounded-full",
       },
     },
     defaultVariants: {
@@ -38,18 +44,45 @@ export const buttonVariants = cva(
 );
 export type ButtonVariants = VariantProps<typeof buttonVariants>;
 
+/** @version 1.5 */
+export const menuItemVariants = cva(
+  [
+    "mx-1 flex min-h-7 w-[calc(100%-8px)] animate-bg-in cursor-pointer select-none items-center rounded-md px-2 text-sm/[1.2] text-primary hover:bg-primary/5 focus-visible:outline-none dark:text-primary/80",
+    "[&_svg]:block [&_svg]:shrink-0",
+  ],
+  {
+    variants: {
+      variant: {
+        secondary: "text-secondary dark:text-secondary-dark",
+        warning: "hover:text-red",
+        error: "text-red",
+      },
+      inset: { true: "pl-8" },
+      disabled: {
+        true: "pointer-events-none cursor-not-allowed opacity-50 hover:bg-transparent",
+      },
+    },
+    defaultVariants: {},
+  },
+);
+export type MenuItemVariants = VariantProps<typeof menuItemVariants>;
+
+/** @version 1.5 */
 export const inputVariants = cva(
-  "flex w-full border px-3 py-1 text-sm/[1.2] transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
+  "relative flex h-7 w-full cursor-text items-center rounded-md bg-input/60 px-1.5 py-[3px] text-sm text-primary transition-colors dark:bg-input/5 dark:text-primary/80 [&_input]:block [&_input]:w-full [&_input]:bg-transparent [&_input]:p-0 [&_input]:text-inherit",
   {
     variants: {
       variant: {
         default:
-          "h-7 rounded-sm border-border bg-input/60 text-primary shadow-none placeholder:text-primary/45 dark:bg-input/5 dark:text-primary/80",
-        /** @variant search: Inherit styles from `notion` and add padding for the icon */
-        search:
-          "relative h-7 rounded-sm border-border bg-input/60 pl-6 text-primary shadow-none placeholder:text-primary/45 dark:bg-input/5 dark:text-primary/80 [&::-webkit-search-cancel-button]:appearance-none",
-        shadcn:
-          "h-9 rounded-md border-input bg-transparent shadow-sm placeholder:text-muted focus-visible:ring-1 focus-visible:ring-ring dark:text-muted-dark",
+          "ring-1 ring-inset ring-ring focus-within:notion-focus-within dark:ring-ring-dark",
+        /**
+         * default style but not focusable
+         */
+        plain: "ring-1 ring-inset ring-ring dark:ring-ring-dark",
+        /**
+         * transparent and without border
+         */
+        flat: "bg-transparent dark:bg-transparent",
       },
     },
     defaultVariants: { variant: "default" },
@@ -88,3 +121,5 @@ export const separatorVariants = cva("-mx-1 my-1 h-px", {
   defaultVariants: { variant: "default" },
 });
 export type SeparatorVariants = VariantProps<typeof separatorVariants>;
+
+export const groupVariants = cva("flex flex-col gap-px py-1");

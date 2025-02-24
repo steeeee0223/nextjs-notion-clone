@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { HelpCircle } from "lucide-react";
 
-import { Hint } from "@swy/ui/shared";
+import { Hint, HintProvider } from "@swy/ui/shared";
 
 const meta = {
   title: "shared/Hint",
@@ -9,6 +9,11 @@ const meta = {
   parameters: { layout: "centered" },
   argTypes: { children: { control: false } },
   tags: ["autodocs"],
+  render: (props) => (
+    <HintProvider>
+      <Hint {...props} />
+    </HintProvider>
+  ),
 } satisfies Meta<typeof Hint>;
 export default meta;
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback } from "react";
+import React, { useCallback } from "react";
 import type { EmojiCategoryList } from "@udecode/plate-emoji";
 
 import { TooltipProvider } from "@swy/ui/shadcn";
@@ -22,7 +22,7 @@ type EmojiPickerContentProps = Pick<
   | "onSelectEmoji"
 >;
 
-export function EmojiPickerContent({
+export const EmojiPickerContent: React.FC<EmojiPickerContentProps> = ({
   emojiLibrary,
   skin,
   i18n,
@@ -32,7 +32,7 @@ export function EmojiPickerContent({
   settings,
   visibleCategories,
   onSelectEmoji,
-}: EmojiPickerContentProps) {
+}) => {
   // const getRowWidth = settings.perLine.value * settings.buttonSize.value;
 
   const isCategoryVisible = useCallback(
@@ -125,4 +125,4 @@ export function EmojiPickerContent({
       </div>
     </TooltipProvider>
   );
-}
+};

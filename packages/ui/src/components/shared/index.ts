@@ -1,7 +1,6 @@
 export * from "./activity-item";
 export * from "./cover";
 export * from "./cover-picker";
-export * from "./crud-item";
 export * from "./emoji-picker";
 export * from "./form-errors";
 export * from "./kanban";

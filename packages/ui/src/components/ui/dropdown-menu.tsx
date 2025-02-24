@@ -7,23 +7,35 @@ import {
   ChevronRightIcon,
   DotFilledIcon,
 } from "@radix-ui/react-icons";
-import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "@swy/ui/lib";
 
 import {
-  buttonVariants,
   contentVariants,
+  groupVariants,
+  menuItemVariants,
   separatorVariants,
-  type ButtonVariants,
+  type MenuItemVariants,
 } from "./variants";
 
 const DropdownMenu = DropdownMenuPrimitive.Root;
 const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger;
-const DropdownMenuGroup = DropdownMenuPrimitive.Group;
 const DropdownMenuPortal = DropdownMenuPrimitive.Portal;
 const DropdownMenuSub = DropdownMenuPrimitive.Sub;
 const DropdownMenuRadioGroup = DropdownMenuPrimitive.RadioGroup;
+
+/** @version 1.5 */
+const DropdownMenuGroup = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <DropdownMenuPrimitive.Group
+    ref={ref}
+    className={cn(groupVariants({ className }))}
+    {...props}
+  />
+));
+DropdownMenuGroup.displayName = "DropdownMenuGroup";
 
 const DropdownMenuSubTrigger = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.SubTrigger>,
@@ -70,6 +82,7 @@ DropdownMenuSubContent.displayName =
 export type DropdownMenuContentProps = React.ComponentPropsWithoutRef<
   typeof DropdownMenuPrimitive.Content
 >;
+/** @version 1.5 */
 const DropdownMenuContent = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.Content>,
   DropdownMenuContentProps
@@ -79,7 +92,7 @@ const DropdownMenuContent = React.forwardRef<
       ref={ref}
       sideOffset={sideOffset}
       className={cn(
-        "min-w-[8rem] overflow-hidden p-1",
+        "min-w-[8rem] overflow-hidden",
         contentVariants({ variant: "popover" }),
         className,
       )}
@@ -89,28 +102,18 @@ const DropdownMenuContent = React.forwardRef<
 ));
 DropdownMenuContent.displayName = DropdownMenuPrimitive.Content.displayName;
 
-const itemVariants = cva("h-auto min-h-7 px-2 py-1.5 text-sm/[1.2]", {
-  variants: {
-    variant: { warning: "text-red" },
-    inset: { true: "pl-8" },
-  },
-  defaultVariants: {},
-});
-export interface DropdownMenuItemProps
+interface DropdownMenuItemProps
   extends React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Item>,
-    Omit<ButtonVariants, "variant">,
-    VariantProps<typeof itemVariants> {}
+    Omit<MenuItemVariants, "disabled"> {}
+/** @version 1.5 */
 const DropdownMenuItem = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.Item>,
   DropdownMenuItemProps
->(({ className, variant, size = "sm", inset, ...props }, ref) => (
+>(({ className, variant, inset, disabled, ...props }, ref) => (
   <DropdownMenuPrimitive.Item
     ref={ref}
-    className={cn(
-      buttonVariants({ variant: "item", size }),
-      itemVariants({ variant, inset }),
-      className,
-    )}
+    className={cn(menuItemVariants({ variant, inset, disabled, className }))}
+    disabled={disabled}
     {...props}
   />
 ));
@@ -183,13 +186,17 @@ DropdownMenuLabel.displayName = DropdownMenuPrimitive.Label.displayName;
 type DropdownMenuSeparatorProps = React.ComponentPropsWithoutRef<
   typeof DropdownMenuPrimitive.Separator
 >;
+/** @version 1.5 */
 const DropdownMenuSeparator = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.Separator>,
   DropdownMenuSeparatorProps
 >(({ className, ...props }, ref) => (
   <DropdownMenuPrimitive.Separator
     ref={ref}
-    className={cn(separatorVariants({ variant: "default", className }))}
+    className={cn(
+      separatorVariants({ variant: "default", className: "m-0" }),
+      className,
+    )}
     {...props}
   />
 ));

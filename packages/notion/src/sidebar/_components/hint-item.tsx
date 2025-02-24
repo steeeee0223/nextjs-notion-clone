@@ -6,7 +6,6 @@ import {
   Button,
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
 } from "@swy/ui/shadcn";
 
@@ -22,30 +21,28 @@ interface HintItemProps {
 export const HintItem = forwardRef<HTMLButtonElement, HintItemProps>(
   ({ className, icon: Icon, label, hint, shortcut, onClick }, ref) => {
     return (
-      <TooltipProvider>
-        <Tooltip delayDuration={0}>
-          <TooltipTrigger asChild>
-            <Button
-              ref={ref}
-              variant="subitem"
-              onClick={onClick}
-              className={cn(
-                "h-[27px] w-full justify-normal px-3 py-1 font-medium",
-                className,
-              )}
-            >
-              <Icon className="size-5 flex-shrink-0 rounded-sm p-0.5 text-muted dark:text-muted-dark" />
-              <span className="ml-1 truncate">{label}</span>
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent side="right" className="font-medium">
-            <div>{hint}</div>
-            <span className="text-[#cecdca]/60 dark:text-[#7f7f7f]">
-              {shortcut}
-            </span>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            ref={ref}
+            variant="subitem"
+            onClick={onClick}
+            className={cn(
+              "h-[27px] w-full justify-normal px-3 py-1 font-medium",
+              className,
+            )}
+          >
+            <Icon className="size-5 flex-shrink-0 rounded-sm p-0.5 text-muted dark:text-muted-dark" />
+            <span className="ml-1 truncate">{label}</span>
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent side="right" className="font-medium">
+          <div>{hint}</div>
+          <span className="text-[#cecdca]/60 dark:text-[#7f7f7f]">
+            {shortcut}
+          </span>
+        </TooltipContent>
+      </Tooltip>
     );
   },
 );

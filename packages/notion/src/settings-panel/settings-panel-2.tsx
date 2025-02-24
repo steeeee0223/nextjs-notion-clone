@@ -4,7 +4,7 @@ import React, { useMemo, useRef, useState } from "react";
 
 import { I18nProvider } from "@swy/i18n";
 import { useTheme } from "@swy/ui/shadcn";
-import { ModalProvider } from "@swy/ui/shared";
+import { HintProvider, ModalProvider } from "@swy/ui/shared";
 
 import { getScopes } from "../scopes";
 import {
@@ -42,11 +42,13 @@ export const SettingsPanel2: React.FC<SettingsPanel2Props> = ({
 
   return (
     <I18nProvider language={settings.account.language} defaultNS="settings">
-      <SettingsContext.Provider value={contextValue}>
-        <ModalProvider>
-          <SettingsPanel />
-        </ModalProvider>
-      </SettingsContext.Provider>
+      <HintProvider delayDuration={500}>
+        <SettingsContext.Provider value={contextValue}>
+          <ModalProvider>
+            <SettingsPanel />
+          </ModalProvider>
+        </SettingsContext.Provider>
+      </HintProvider>
     </I18nProvider>
   );
 };

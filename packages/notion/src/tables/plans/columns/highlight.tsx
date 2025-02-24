@@ -1,8 +1,7 @@
 import type { ColumnDef } from "@tanstack/react-table";
 
-import { cn } from "@swy/ui/lib";
 import { Button } from "@swy/ui/shadcn";
-import { Hint } from "@swy/ui/shared";
+import { Hint, HintProvider } from "@swy/ui/shared";
 import { Plan } from "@swy/validators";
 
 import { ListCell, PlanHeader } from "../cells";
@@ -32,67 +31,70 @@ export const getHighlightColumns = (
   {
     accessorKey: Plan.PLUS,
     header: () => (
-      <PlanHeader
-        title={"Plus"}
-        description={"$10 per member / month billed annually"}
-        subtext="$12 billed monthly"
-      >
-        <Hint
-          description="Only workspace owners can perform this action."
-          className={canUpgrade ? "hidden" : "w-[174px]"}
-          triggerProps={cn(!canUpgrade && "cursor-default")}
+      <HintProvider>
+        <PlanHeader
+          title={"Plus"}
+          description={"$10 per member / month billed annually"}
+          subtext="$12 billed monthly"
         >
-          <Button size="sm" className="h-7" disabled={!canUpgrade}>
-            Upgrade
-          </Button>
-        </Hint>
-      </PlanHeader>
+          <Hint
+            description="Only workspace owners can perform this action."
+            className={canUpgrade ? "hidden" : "w-[174px]"}
+          >
+            <Button size="sm" className="h-7" disabled={!canUpgrade}>
+              Upgrade
+            </Button>
+          </Hint>
+        </PlanHeader>
+      </HintProvider>
     ),
     cell: ({ row }) => <ListCell items={row.getValue("plus")} />,
   },
   {
     accessorKey: Plan.BUSINESS,
     header: () => (
-      <PlanHeader
-        title={"Business"}
-        description={"$15 per member / month billed annually"}
-        subtext="$18 billed monthly"
-      >
-        <Hint
-          description="Only workspace owners can perform this action."
-          className={canUpgrade ? "hidden" : "w-[174px]"}
-          triggerProps={cn(!canUpgrade && "cursor-default")}
+      <HintProvider>
+        <PlanHeader
+          title={"Business"}
+          description={"$15 per member / month billed annually"}
+          subtext="$18 billed monthly"
         >
-          <Button
-            variant="blue"
-            size="sm"
-            className="h-7"
-            disabled={!canUpgrade}
+          <Hint
+            description="Only workspace owners can perform this action."
+            className={canUpgrade ? "hidden" : "w-[174px]"}
           >
-            Upgrade
-          </Button>
-        </Hint>
-      </PlanHeader>
+            <Button
+              variant="blue"
+              size="sm"
+              className="h-7"
+              disabled={!canUpgrade}
+            >
+              Upgrade
+            </Button>
+          </Hint>
+        </PlanHeader>
+      </HintProvider>
     ),
     cell: ({ row }) => <ListCell items={row.getValue("business")} />,
   },
   {
     accessorKey: Plan.ENTERPRISE,
     header: () => (
-      <PlanHeader
-        title={"Enterprise"}
-        description={"Contact Sales for pricing"}
-      >
-        <Hint
-          description="Only workspace owners can perform this action."
-          className={canUpgrade ? "hidden" : "w-[174px]"}
-          triggerProps={cn(!canUpgrade && "cursor-default")}
+      <HintProvider>
+        <PlanHeader
+          title={"Enterprise"}
+          description={"Contact Sales for pricing"}
         >
-          <Button size="sm" className="h-7" disabled={!canUpgrade}>
-            Contact sales
-          </Button>
-        </Hint>
-      </PlanHeader>
+          <Hint
+            description="Only workspace owners can perform this action."
+            className={canUpgrade ? "hidden" : "w-[174px]"}
+          >
+            <Button size="sm" className="h-7" disabled={!canUpgrade}>
+              Contact sales
+            </Button>
+          </Hint>
+        </PlanHeader>
+      </HintProvider>
     ),
     cell: ({ row }) => <ListCell items={row.getValue("enterprise")} />,
   },

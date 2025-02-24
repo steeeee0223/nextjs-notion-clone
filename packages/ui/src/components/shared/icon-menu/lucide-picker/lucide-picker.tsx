@@ -3,14 +3,15 @@
 import React, { memo, useMemo } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 
-import { Button, TooltipProvider } from "@swy/ui/shadcn";
+import { Button } from "@swy/ui/shadcn";
 
-import { MenuSearchBar, MenuSectionTitle, Tooltip } from "../_components";
+import { MenuSearchBar, MenuSectionTitle } from "../_components";
 import { COLOR } from "../../../../constants/colors";
+import { Hint, HintProvider } from "../../hint";
 import type { LucideName } from "../../icon-block";
 import { createLucideIcon } from "../../icon-block/create-lucide-icon";
 import { Spinner } from "../../spinner";
-import ColorPicker from "./color-picker";
+import { ColorPicker } from "./color-picker";
 import { useLucideIcons } from "./use-lucide-icons";
 
 interface IconProps {
@@ -22,7 +23,7 @@ interface IconProps {
 const Icon: React.FC<IconProps> = ({ name, color, onClick }) => {
   const LucideIcon = useMemo(() => createLucideIcon(name), [name]);
   return (
-    <Tooltip side="top" description={name}>
+    <Hint side="top" description={name}>
       <Button
         variant="hint"
         onClick={() => onClick(name)}
@@ -30,7 +31,7 @@ const Icon: React.FC<IconProps> = ({ name, color, onClick }) => {
       >
         <LucideIcon color={color} size={20} strokeWidth={2.2} />
       </Button>
-    </Tooltip>
+    </Hint>
   );
 };
 
@@ -62,7 +63,7 @@ export const LucidePicker: React.FC<LucidePickerProps> = memo(
             <ColorPicker palette={COLOR} value={color} onSelect={setColor} />
           }
         />
-        <TooltipProvider delayDuration={500}>
+        <HintProvider delayDuration={500}>
           <div className="mt-0 py-1.5">
             {isLoading ? (
               <Spinner className="mx-1 my-2" />
@@ -106,7 +107,7 @@ export const LucidePicker: React.FC<LucidePickerProps> = memo(
               <MenuSectionTitle title="No results" />
             )}
           </div>
-        </TooltipProvider>
+        </HintProvider>
       </div>
     );
   },

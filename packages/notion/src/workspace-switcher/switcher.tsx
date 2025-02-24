@@ -17,10 +17,6 @@ import { IconBlock, type IconInfo } from "@swy/ui/shared";
 import { useWorkspace } from "../workspace-provider";
 import { HeaderDropdown, WorkspaceList } from "./_components";
 
-const styles = {
-  action: "w-full text-xs text-secondary dark:text-secondary-dark",
-};
-
 export interface WorkspaceSwitcherProps {
   onCreateAccount?: () => void;
   onCreateWorkspace?: () => void;
@@ -74,28 +70,40 @@ export const WorkspaceSwitcher = ({
         alignOffset={11}
         forceMount
       >
-        <DropdownMenuGroup className="flex flex-col space-y-2 p-1">
-          <div className="flex items-center">
-            <p className="flex-1 text-xs font-medium leading-none text-secondary dark:text-secondary-dark">
-              {user.email}
-            </p>
-            <HeaderDropdown
-              onLogout={handleLogout}
-              onCreateWorkspace={onCreateWorkspace}
-            />
+        <div className="mx-3 mt-2 flex h-5 items-center justify-between">
+          <div className="mr-1.5 truncate text-xs font-medium text-secondary dark:text-secondary-dark">
+            {user.email}
           </div>
-          <WorkspaceList onSelect={onSelect} />
+          <HeaderDropdown
+            onLogout={handleLogout}
+            onCreateWorkspace={onCreateWorkspace}
+          />
+        </div>
+        <WorkspaceList onSelect={onSelect} />
+        <DropdownMenuSeparator />
+        <DropdownMenuGroup>
+          <DropdownMenuItem
+            variant="secondary"
+            className="text-xs"
+            onClick={onCreateAccount}
+          >
+            Add another account
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            variant="secondary"
+            className="text-xs"
+            onClick={onLogout}
+          >
+            Log out
+          </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem className={styles.action} onClick={onCreateAccount}>
-            Add another account
-          </DropdownMenuItem>
-          <DropdownMenuItem className={styles.action} onClick={handleLogout}>
-            Log out
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem className={styles.action} onClick={handleGetMac}>
+          <DropdownMenuItem
+            variant="secondary"
+            className="text-xs"
+            onClick={handleGetMac}
+          >
             Get Mac App
           </DropdownMenuItem>
         </DropdownMenuGroup>

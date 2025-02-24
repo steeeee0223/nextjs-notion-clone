@@ -149,11 +149,14 @@ export const People = () => {
           </div>
           <div className="flex items-center justify-end gap-1.5">
             <Input
-              variant="search"
-              className="w-[180px] border-none bg-transparent"
+              search
+              clear
+              variant="flat"
+              className="w-[180px]"
               placeholder={tabs.search}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
+              onCancel={() => setSearch("")}
             />
             <Button
               variant="blue"
