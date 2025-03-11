@@ -31,7 +31,7 @@
     "@swy/eslint-config": "workspace:*",
     "@swy/prettier-config": "workspace:*",
     "@swy/tsconfig": "workspace:*",
-    "@types/node": "catalog:node20",
+    "@types/node": "catalog:node22",
     "dotenv-cli": "catalog:env",
     "eslint": "catalog:",
     "prettier": "catalog:",
