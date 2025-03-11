@@ -17,7 +17,7 @@
     "@swy/prettier-config": "workspace:*",
     "@swy/tailwind-config": "workspace:*",
     "@swy/tsconfig": "workspace:*",
-    "@types/node": "catalog:node20",
+    "@types/node": "catalog:node22",
     "eslint": "catalog:",
     "h3": "^1.13.0",
     "nitropack": "^2.9.7",

@@ -41,7 +41,7 @@
     "@swy/prettier-config": "workspace:*",
     "@swy/tailwind-config": "workspace:*",
     "@swy/tsconfig": "workspace:*",
-    "@types/node": "catalog:node20",
+    "@types/node": "catalog:node22",
     "@types/react": "catalog:react18",
     "@types/react-dom": "catalog:react18",
     "@types/uuid": "catalog:uuid",
