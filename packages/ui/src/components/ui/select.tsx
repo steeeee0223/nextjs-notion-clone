@@ -11,6 +11,7 @@ import {
   ButtonVariants,
   buttonVariants,
   contentVariants,
+  menuItemVariants,
   separatorVariants,
 } from "./variants";
 
@@ -30,7 +31,7 @@ const SelectTrigger = React.forwardRef<
     ref={ref}
     className={cn(
       buttonVariants({ variant: "item", size: "sm" }),
-      "mb-1 mt-3 inline-flex h-7 w-full min-w-0 flex-shrink-0 justify-between p-2",
+      "mb-1 mt-3 h-7 w-full min-w-0 shrink-0 justify-between p-2",
       "placeholder:text-secondary data-[placeholder]:text-secondary dark:placeholder:text-secondary-dark dark:data-[placeholder]:text-secondary-dark",
       "[&>span]:line-clamp-1",
       className,
@@ -83,6 +84,7 @@ SelectScrollDownButton.displayName =
 type SelectContentProps = React.ComponentPropsWithoutRef<
   typeof SelectPrimitive.Content
 >;
+/** @version 1.5 */
 const SelectContent = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Content>,
   SelectContentProps
@@ -103,7 +105,7 @@ const SelectContent = React.forwardRef<
       <SelectScrollUpButton />
       <SelectPrimitive.Viewport
         className={cn(
-          "p-1",
+          "py-1",
           position === "popper" &&
             "h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)]",
         )}
@@ -133,28 +135,29 @@ interface SelectItemProps
     ButtonVariants {
   hideCheck?: boolean;
 }
+/** @version 1.5 */
 const SelectItem = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Item>,
   SelectItemProps
->(({ className, size = "sm", children, hideCheck = false, ...props }, ref) => (
+>(({ className, children, hideCheck = false, disabled, ...props }, ref) => (
   <SelectPrimitive.Item
     ref={ref}
     className={cn(
-      buttonVariants({ variant: "item", size }),
-      "h-auto w-full px-2 py-1 focus:bg-primary/5",
+      menuItemVariants({ disabled, className: "py-1 focus:bg-primary/5" }),
       className,
     )}
+    disabled={disabled}
     {...props}
   >
-    <SelectPrimitive.ItemText className="flex-1">
-      {children}
+    <SelectPrimitive.ItemText asChild>
+      <div className="mr-1.5 block min-w-0 flex-auto">{children}</div>
     </SelectPrimitive.ItemText>
     {!hideCheck && (
-      <span className="flex-0 h-3.5 w-3.5 items-center justify-center">
-        <SelectPrimitive.ItemIndicator>
-          <Check className="h-4 w-4" />
-        </SelectPrimitive.ItemIndicator>
-      </span>
+      <SelectPrimitive.ItemIndicator asChild>
+        <div className="ml-auto block min-w-0 shrink-0">
+          <Check className="block size-3.5 shrink-0" />
+        </div>
+      </SelectPrimitive.ItemIndicator>
     )}
   </SelectPrimitive.Item>
 ));

@@ -4,6 +4,7 @@ import {
   Button,
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@swy/ui/shadcn";
@@ -60,16 +61,18 @@ export const ActionCell = ({ onDisconnect }: ActionCellProps) => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="center">
-        {/* <DropdownMenuItem onClick={onConnect}>
-          Connect another account
-        </DropdownMenuItem> */}
-        <DropdownMenuItem
-          variant="warning"
-          disabled={disabledDisconnect}
-          onClick={handleDisconnect}
-        >
-          Disconnect account
-        </DropdownMenuItem>
+        <DropdownMenuGroup>
+          {/* <DropdownMenuItem onClick={onConnect}>
+              Connect another account
+            </DropdownMenuItem> */}
+          <DropdownMenuItem
+            variant="error"
+            disabled={disabledDisconnect}
+            onClick={handleDisconnect}
+          >
+            Disconnect account
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>
   );

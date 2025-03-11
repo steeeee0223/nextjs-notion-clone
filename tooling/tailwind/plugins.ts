@@ -34,5 +34,12 @@ export const notionPlugin: PluginCreator = (api) => {
         "background-clip": "padding-box",
       },
     },
+    ".notion-focus-within": {
+      "box-shadow": "inset 0 0 0 1px #2383e291, 0 0 0 2px #2383e259 !important",
+    },
   });
+  api.addVariant(
+    "radix-popper-wrapper",
+    "& [data-radix-popper-content-wrapper]",
+  );
 };

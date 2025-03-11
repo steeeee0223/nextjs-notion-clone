@@ -1,5 +1,3 @@
-/* eslint-disable jsx-a11y/interactive-supports-focus */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -9,8 +7,8 @@ import { toast } from "sonner";
 import { cn } from "@swy/ui/lib";
 import {
   Button,
-  buttonVariants,
   Input,
+  menuItemVariants,
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -127,33 +125,33 @@ export const TrashBox = ({
               {filteredItems.map(({ id, title, type, icon }) => (
                 <div
                   key={id}
-                  role="button"
+                  id={id}
+                  tabIndex={-1}
+                  role="menuitem"
                   onClick={() => handleSelect(id, type)}
-                  className={cn(
-                    buttonVariants({ variant: "item" }),
-                    "w-full justify-between px-2",
-                  )}
+                  onKeyDown={() => handleSelect(id, type)}
+                  className={cn(menuItemVariants())}
                 >
-                  <div className="flex items-center gap-x-1 pl-2">
+                  <div className="mr-2.5 flex items-center justify-center">
                     <IconBlock icon={icon ?? { type: "text", text: title }} />
-                    <span className="truncate">{title}</span>
                   </div>
-                  <div className="flex items-center gap-x-1 p-1">
-                    <Hint asChild side="bottom" description="Restore">
+                  <div className="mr-1.5 min-w-0 flex-auto truncate">
+                    {title}
+                  </div>
+                  <div className="flex min-w-0 flex-none gap-1">
+                    <Hint description="Restore">
                       <Button
                         variant="hint"
                         size="icon-sm"
-                        className="p-1"
                         onClick={(e) => handleRestore(e, id)}
                       >
                         <Undo className="size-4" />
                       </Button>
                     </Hint>
-                    <Hint asChild side="bottom" description="Delete from Trash">
+                    <Hint description="Delete from Trash">
                       <Button
                         variant="hint"
                         size="icon-sm"
-                        className="p-1"
                         onClick={(e) => handleDelete(e, id)}
                       >
                         <Trash className="size-4" />

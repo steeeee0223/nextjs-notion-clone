@@ -98,9 +98,9 @@ export const CoverPicker = ({
               Works with any image form the web.
             </p>
           </TabsContent>
-          <TabsContent value="unsplash" className={styles.tabContent}>
+          <TabsContent value="unsplash" className="mb-2">
             <Unsplash
-              className="overflow-y-scroll p-0"
+              className="overflow-y-scroll"
               apiKey={unsplashAPIKey}
               onSelect={onUrlSubmit}
             />

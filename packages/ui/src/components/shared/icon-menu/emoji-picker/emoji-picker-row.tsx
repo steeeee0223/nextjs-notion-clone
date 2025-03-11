@@ -1,11 +1,11 @@
 "use client";
 
-import { memo } from "react";
+import React, { memo } from "react";
 import type { Emoji, GridRow } from "@udecode/plate-emoji";
 
 import { Button } from "@swy/ui/shadcn";
 
-import { Tooltip } from "../_components";
+import { Hint } from "../../hint";
 import type { Skin, UseEmojiPickerType } from "./types";
 import { getNativeEmoji } from "./utils";
 
@@ -18,7 +18,7 @@ interface EmojiButtonProps {
 
 export const EmojiButton: React.FC<EmojiButtonProps> = memo(
   ({ emoji, skin, index, onSelect }) => (
-    <Tooltip align="center" side="top" description={emoji.name}>
+    <Hint align="center" side="top" description={emoji.name}>
       <Button
         variant="hint"
         className="size-8 p-0 text-2xl/none"
@@ -38,7 +38,7 @@ export const EmojiButton: React.FC<EmojiButtonProps> = memo(
           {getNativeEmoji(emoji, skin)}
         </span>
       </Button>
-    </Tooltip>
+    </Hint>
   ),
 );
 EmojiButton.displayName = "EmojiButton";

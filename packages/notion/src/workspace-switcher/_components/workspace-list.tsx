@@ -5,7 +5,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Check } from "lucide-react";
 
-import { Badge, DropdownMenuItem } from "@swy/ui/shadcn";
+import { Badge, DropdownMenuGroup, DropdownMenuItem } from "@swy/ui/shadcn";
 import { IconBlock } from "@swy/ui/shared";
 import { Role } from "@swy/validators";
 
@@ -33,7 +33,7 @@ const Title = ({ workspace, onClick }: TitleProps) => {
                 size="sm"
                 className="ml-2 select-none self-center whitespace-nowrap uppercase"
               >
-                <Icon.Globe className="mr-0.5 inline size-2 flex-shrink-0 fill-[#cf8807] align-middle" />
+                <Icon.Globe className="mr-0.5 size-2 fill-orange" />
                 Guest
               </Badge>
             </div>
@@ -95,7 +95,7 @@ export const WorkspaceList = ({ onSelect }: WorkspaceListProps) => {
   }, [workspaces, initialWorkspaces]);
 
   return (
-    <div className="select-none">
+    <DropdownMenuGroup className="select-none">
       {workspaces.map((workspace, i) => (
         <DropdownMenuItem
           key={i}
@@ -107,20 +107,20 @@ export const WorkspaceList = ({ onSelect }: WorkspaceListProps) => {
           onDragOver={(e) => e.preventDefault()}
           onClick={() => handleClick(workspace.id)}
         >
-          <div className="visible mx-1 flex h-6 w-[18px] flex-shrink-0 cursor-grab items-center justify-center">
-            <Icon.DragHandle className="block size-3 flex-shrink-0 fill-primary/45" />
+          <div className="visible mx-1 flex h-6 w-[18px] cursor-grab items-center justify-center">
+            <Icon.DragHandle className="size-3 fill-primary/45" />
           </div>
           <div draggable={false} className="flex items-center">
             <IconBlock size="md" icon={workspace.icon} />
           </div>
           <Title workspace={workspace} onClick={handleClick} />
           {activeWorkspace?.id === workspace.id && (
-            <div className="ml-auto mr-1 size-4 flex-shrink-0">
-              <Check className="mr-2 h-4 w-4 select-none self-center" />
+            <div className="ml-auto mr-1">
+              <Check className="mr-2 size-4 select-none self-center" />
             </div>
           )}
         </DropdownMenuItem>
       ))}
-    </div>
+    </DropdownMenuGroup>
   );
 };

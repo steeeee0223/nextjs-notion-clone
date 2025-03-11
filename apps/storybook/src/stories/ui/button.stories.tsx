@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { ChevronRight, CircleHelp, MailOpen, RefreshCw } from "lucide-react";
+import { ChevronRight, CircleHelp, RefreshCw } from "lucide-react";
 
 import { Button } from "@swy/ui/shadcn";
 
@@ -8,6 +8,9 @@ const meta = {
   component: Button,
   parameters: { layout: "centered" },
   tags: ["autodocs"],
+  argTypes: {
+    disabled: { type: "boolean" },
+  },
 } satisfies Meta<typeof Button>;
 
 export default meta;
@@ -43,16 +46,6 @@ export const Nav: Story = {
     variant: "nav",
     size: "icon",
     children: <ChevronRight className="size-4" />,
-  },
-};
-export const Item: Story = {
-  args: {
-    variant: "item",
-    children: (
-      <>
-        <MailOpen className="mr-2 size-4" /> Login with Email
-      </>
-    ),
   },
 };
 export const Loading: Story = {

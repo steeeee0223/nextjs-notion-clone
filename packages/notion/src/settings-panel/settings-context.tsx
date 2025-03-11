@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext } from "react";
-import type { UseThemeProps } from "next-themes/dist/types";
+import type { UseThemeProps } from "next-themes";
 
 import { Role } from "@swy/validators";
 

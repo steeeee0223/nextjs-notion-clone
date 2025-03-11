@@ -1,3 +1,4 @@
+import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { Input } from "@swy/ui/shadcn";
@@ -12,12 +13,25 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
+const Controlled: Story["render"] = (props) => {
+  const [value, setValue] = useState("");
+  return (
+    <Input
+      {...props}
+      value={value}
+      onChange={(e) => setValue(e.target.value)}
+      onCancel={() => setValue("")}
+    />
+  );
+};
+
 export const Default: Story = {
   args: { placeholder: "Type your name" },
 };
 export const Search: Story = {
-  args: { variant: "search", placeholder: "Search a website" },
+  args: { search: true, placeholder: "Search a website" },
 };
-export const Shadcn: Story = {
-  args: { variant: "shadcn", placeholder: "Paste a link" },
+export const WithClear: Story = {
+  args: { clear: true, placeholder: "Search a website" },
+  render: Controlled,
 };

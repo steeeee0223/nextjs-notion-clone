@@ -17,15 +17,20 @@ export interface UnsplashProps {
  * An `Unsplash` image browser
  */
 export const Unsplash = ({ apiKey, className, onSelect }: UnsplashProps) => {
-  const { images, isLoading, setQuery } = useUnsplash({ apiKey });
+  const { images, isLoading, query, setQuery } = useUnsplash({ apiKey });
 
   return (
     <div className={cn("max-h-[280px] w-full overflow-y-auto p-4", className)}>
-      <Input
-        id="unsplash"
-        onChange={(e) => setQuery(e.target.value)}
-        placeholder="Search for an image..."
-      />
+      <div className="flex">
+        <Input
+          id="unsplash"
+          clear
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          onCancel={() => setQuery("")}
+          placeholder="Search for an image..."
+        />
+      </div>
       <div className="mx-0 mt-4 flex items-center justify-center">
         {isLoading || !images ? (
           <Spinner />

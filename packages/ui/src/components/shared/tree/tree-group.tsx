@@ -5,7 +5,7 @@ import { Plus } from "lucide-react";
 
 import { Button, Skeleton } from "@swy/ui/shadcn";
 
-import { Hint } from "../hint";
+import { Hint, HintProvider } from "../hint";
 
 interface TreeGroupProps extends React.PropsWithChildren {
   title: string;
@@ -27,43 +27,45 @@ export const TreeGroup = ({
   const toggle = () => setOpenGroup((prev) => !prev);
 
   return (
-    <div className={className}>
-      <div className="group flex items-center px-3 py-1">
-        <div className="grow">
-          <Hint asChild side="top" description="Click to hide section">
-            <Button
-              variant="hint"
-              size="xs"
-              onClick={toggle}
-              className="py-0.5 font-semibold"
-            >
-              {title}
-            </Button>
-          </Hint>
+    <HintProvider>
+      <div className={className}>
+        <div className="group flex items-center px-3 py-1">
+          <div className="grow">
+            <Hint side="top" description="Click to hide section">
+              <Button
+                variant="hint"
+                size="xs"
+                onClick={toggle}
+                className="py-0.5 font-semibold"
+              >
+                {title}
+              </Button>
+            </Hint>
+          </div>
+          {description && (
+            <Hint side="right" description={description}>
+              <Button
+                variant="hint"
+                size="xs"
+                onClick={onCreate}
+                className="ml-auto size-auto p-0.5 opacity-0 group-hover:opacity-100"
+              >
+                <Plus className="size-4" />
+              </Button>
+            </Hint>
+          )}
         </div>
-        {description && (
-          <Hint side="right" description={description} asChild>
-            <Button
-              variant="hint"
-              size="xs"
-              onClick={onCreate}
-              className="ml-auto size-auto p-0.5 opacity-0 group-hover:opacity-100"
-            >
-              <Plus className="size-4" />
-            </Button>
-          </Hint>
+        {isLoading ? (
+          <>
+            {Array.from([0, 1, 0, 1, 1]).map((level, i) => (
+              <ItemSkeleton key={i} level={level} />
+            ))}
+          </>
+        ) : (
+          openGroup && <>{children}</>
         )}
       </div>
-      {isLoading ? (
-        <>
-          {Array.from([0, 1, 0, 1, 1]).map((level, i) => (
-            <ItemSkeleton key={i} level={level} />
-          ))}
-        </>
-      ) : (
-        openGroup && <>{children}</>
-      )}
-    </div>
+    </HintProvider>
   );
 };
 

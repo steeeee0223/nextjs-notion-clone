@@ -49,10 +49,12 @@ export const UrlForm = ({ onUrlSubmit, disabled }: UrlFormProps) => {
             <FormItem className="h-7 flex-1">
               <FormControl>
                 <Input
+                  clear
                   disabled={disabled}
                   type="url"
-                  placeholder="Paste link to an image..."
+                  placeholder="Paste an image link..."
                   {...field}
+                  onCancel={() => form.setValue("url", "")}
                 />
               </FormControl>
             </FormItem>

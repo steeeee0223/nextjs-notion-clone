@@ -4,6 +4,7 @@ import {
   Button,
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@swy/ui/shadcn";
@@ -25,14 +26,16 @@ export const HeaderDropdown = ({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuItem className="h-7 gap-x-2" onClick={onCreateWorkspace}>
-          <PlusSquare className="size-4" />
-          <p>Join or create workspace</p>
-        </DropdownMenuItem>
-        <DropdownMenuItem className="h-7 gap-x-2" onClick={onLogout}>
-          <XCircle className="size-4" />
-          <p>Log out</p>
-        </DropdownMenuItem>
+        <DropdownMenuGroup>
+          <DropdownMenuItem onClick={onCreateWorkspace}>
+            <PlusSquare className="mr-2 size-4 text-icon dark:text-icon-dark" />
+            Join or create workspace
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={onLogout}>
+            <XCircle className="mr-2 size-4 text-icon dark:text-icon-dark" />
+            Log out
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>
   );
