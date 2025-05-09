@@ -2,6 +2,11 @@
 
 [![](./docs/img/landing.png)](https://worxpace-playground.vercel.app)
 
+### Important
+
+**This project is no longer maintaining.**
+I'm currently working on the Notion design system, see my new repo [`Notion Kit`](https://github.com/steeeee0223/notion-kit).
+
 ### Apps
 
 - [Steeeee WorXpace](https://worxpace.steeeee0223.vercel.app/)
